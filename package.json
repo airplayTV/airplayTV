@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@fingerprintjs/fingerprintjs": "^4.5.1",
+    "dplayer": "^1.27.1",
+    "hls.js": "^1.5.17",
+    "qrcode": "^1.5.4",
+    "uuid": "^11.0.2",
+    "vue-qrcode-reader": "^5.5.11"
+  }
+}

@@ -5,13 +5,32 @@
 			"style": {
 				"navigationBarTitleText": "uni-app"
 			}
+		},
+		{
+			"path": "pages/index/qr",
+			"style": {
+				"navigationBarTitleText": "扫描"
+			}
+		},
+		{
+			"path": "pages/index/webview",
+			"style": {
+				"navigationBarTitleText": "webview"
+			}
+		},
+		{
+			"path": "pages/index/play",
+			"style": {
+				"navigationBarTitleText": "播放"
+			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#F8F8F8",
+		"navigationStyle": "custom"
 	},
 	"uniIdRouter": {}
 }
