@@ -2,6 +2,7 @@
   <view class="content">
     <image class="qr" :src="qrCodeUrl"></image>
     <view class="text-area">
+      <view>扫码投射</view>
       <view>房间号：{{ fingerprintId }}</view>
     </view>
 
@@ -68,20 +69,20 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: 100vh;
 }
 
 .qr {
   height: 600rpx;
   width: 600rpx;
-  margin-top: 150rpx;
-  margin-bottom: 50rpx;
+  margin-bottom: 30rpx;
 }
-
 
 .text-area {
   font-size: 36rpx;
   color: #8f8f94;
-  line-height: 150%;
+  line-height: 180%;
+  text-align: center;
 }
 
 </style>

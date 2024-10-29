@@ -3,6 +3,7 @@
 import {KEY_FINGERPRINT} from "@/common/constant";
 import {connect} from "@/common/websocket";
 import {joinGroup} from "@/common/api";
+import * as FingerprintJS from "@fingerprintjs/fingerprintjs";
 
 export default {
   onLaunch: function () {
