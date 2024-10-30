@@ -1,9 +1,10 @@
 <script>
 
-import {KEY_FINGERPRINT} from "@/common/constant";
+import {KEY_FINGERPRINT, KEY_VIDEO_PROVIDERS, KEY_VIDEO_SOURCE, KEY_VIDEO_TAG,} from "@/common/constant";
 import {connect} from "@/common/websocket";
-import {joinGroup} from "@/common/api";
+import {httpRequestAsync, joinGroup} from "@/common/api";
 import * as FingerprintJS from "@fingerprintjs/fingerprintjs";
+import {getStorageSync, setStorageSync} from "@/common/utils";
 
 export default {
   onLaunch: function () {
@@ -30,6 +31,7 @@ export default {
 
     connect()
 
+    this.loadOrUpdateSource()
   },
   onShow: function () {
     console.log('App Show')
@@ -43,18 +45,43 @@ export default {
       connect()
     },
     generateFingerprint() {
-      if (uni.getStorageSync(KEY_FINGERPRINT)) {
+      if (getStorageSync(KEY_FINGERPRINT)) {
         return
       }
       console.log('[generateFingerprint]')
 
       let fpPromise = FingerprintJS.load()
       fpPromise.then(fp => fp.get()).then(result => {
-        uni.setStorageSync(KEY_FINGERPRINT, result.visitorId)
+        setStorageSync(KEY_FINGERPRINT, result.visitorId)
       }).catch(err => {
         console.log('[Fingerprint.Error]', err)
       })
     },
+    async loadOrUpdateSource() {
+      const providers = await httpRequestAsync({
+        url: '/api/video/provider',
+        method: 'GET',
+      })
+      if (!providers.data) {
+        console.error('[获取源列表失败]', providers)
+        return
+      }
+      setStorageSync(KEY_VIDEO_PROVIDERS, providers.data)
+
+      let source = getStorageSync(KEY_VIDEO_SOURCE)
+      if (!source) {
+        setStorageSync(KEY_VIDEO_SOURCE, providers.data[0].name)
+        source = providers.data[0]
+      }
+
+      let tag = getStorageSync(KEY_VIDEO_TAG)
+      if (!tag) {
+        setStorageSync(KEY_VIDEO_TAG, providers.data[0].tags[0].value)
+        tag = providers.data[0]
+      }
+
+      console.log('[defaultConfig]', source, tag)
+    }
 
   },
 }

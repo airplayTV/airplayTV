@@ -23,6 +23,24 @@
 			"style": {
 				"navigationBarTitleText": "播放"
 			}
+		},
+		{
+			"path": "video/index",
+			"style": {
+				"navigationBarTitleText": "视频列表"
+			}
+		},
+		{
+			"path": "video/detail",
+			"style": {
+				"navigationBarTitleText": "视频详情"
+			}
+		},
+		{
+			"path": "video/play",
+			"style": {
+				"navigationBarTitleText": "视频播放"
+			}
 		}
 	],
 	"globalStyle": {
