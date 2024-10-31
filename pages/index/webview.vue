@@ -10,7 +10,7 @@
 import {send} from '@/common/websocket'
 import QRCode from "qrcode";
 import {KEY_CLIENT_ID, KEY_FINGERPRINT} from "@/common/constant";
-import {qrUrl} from "@/config";
+import {joinRoomUrl} from "@/config";
 
 export default {
   data() {
@@ -40,7 +40,7 @@ export default {
       })
     },
     qrCode() {
-      const tmpUrl = `${qrUrl}?version=v2&client_id=${this.clientId}&t=` + Date.now()
+      const tmpUrl = `${joinRoomUrl}?version=v2&client_id=${this.clientId}&t=` + Date.now()
       QRCode.toDataURL(tmpUrl, {
         errorCorrectionLevel: 'H',
         type: 'image/jpeg',
