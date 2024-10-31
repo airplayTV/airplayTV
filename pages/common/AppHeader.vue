@@ -1,11 +1,11 @@
 <template>
   <view class="flex-row flex-justify-between padding-30rpx padding-no-bottom flex-align-center">
     <view class="flex-row">
-      <b style="">App<!--AirplayTV--></b>
+      <b @click="navigateToUrl('/video/list')">AirplayTV</b>
       <view class="nav-link">
-        <text class="href">Home</text>
-        <text class="href">Control</text>
-        <text class="href">Setting</text>
+        <text class="href" @click="navigateToUrl('/video/list')">首页</text>
+        <text class="href">遥控</text>
+        <text class="href">设置</text>
       </view>
     </view>
     <view>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import {getStorageSync, setStorageSync} from "@/common/utils";
+import {getStorageSync, navigateToUrl, setStorageSync} from "@/common/utils";
 import {KEY_VIDEO_PROVIDERS, KEY_VIDEO_SOURCE, KEY_VIDEO_SOURCE_TAGS, KEY_VIDEO_TAG} from "@/common/constant";
 
 export default {
@@ -48,6 +48,7 @@ export default {
     })
   },
   methods: {
+    navigateToUrl,
     onProviderChange(e) {
       const source = e
       // 更新配置

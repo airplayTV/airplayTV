@@ -14,7 +14,7 @@
             class="flex-column flex-align-center item"
             v-for="(video,idx) in videoList.list"
             :key="idx" @click="navigateToUrl(`/video/detail?id=${video.id}`)">
-          <image class="thumb" :src="defaultCover" mode="aspectFill"></image>
+          <image class="thumb" :src="video.thumb" mode="aspectFill"></image>
           <view class="name text-ellipsis">{{ video.name }}</view>
         </view>
       </view>

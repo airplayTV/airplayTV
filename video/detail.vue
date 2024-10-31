@@ -6,7 +6,7 @@
     <view v-if="videoInfo">
       <view class="padding-30rpx padding-no-bottom flex-column flex-align-center">
         <view class="padding-20rpx padding-no-bottom">
-          <image class="thumb" :src="defaultCover" mode="aspectFill"></image>
+          <image class="thumb" :src="videoInfo.thumb" mode="aspectFill"></image>
           <!-- videoInfo.thumb -->
         </view>
       </view>
