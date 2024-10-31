@@ -1,7 +1,20 @@
 <template>
-  <view class="content">
-    <div id="dplayer" class="dplayer" ref="dplayer"></div>
+  <view class="container">
+
+    <AppHeader />
+
+    <view class="padding-30rpx padding-no-bottom text-align-center">
+      {{ options.name ?? videoSource.name }}
+    </view>
+
+    <view class="padding-20rpx">
+      <div id="dplayer" class="dplayer" ref="dplayer"></div>
+    </view>
+
+    <AppFooter />
+
   </view>
+
 </template>
 
 <script>
@@ -10,6 +23,10 @@ import {QrcodeCapture, QrcodeDropZone, QrcodeStream} from 'vue-qrcode-reader'
 import {KEY_CLIENT_ID} from "@/common/constant";
 import DPlayer from 'dplayer';
 import Hls from 'hls.js';
+import AppHeader from "@/pages/common/AppHeader.vue";
+import AppFooter from "@/pages/common/AppFooter.vue";
+import {httpRequest} from "@/common/api";
+import {navigateToUrl} from "@/common/utils";
 
 export default {
   data() {
@@ -22,22 +39,31 @@ export default {
         hls: null,
         hide: true,
       },
+      options: null,
+      videoSource: null,
     }
   },
   components: {
+    AppFooter,
+    AppHeader,
     QrcodeStream,
     QrcodeDropZone,
     QrcodeCapture
   },
-  onLoad() {
+  onLoad(options) {
+    if (!options.pid) {
+      navigateToUrl('/video/list?from-detail-empty-pid')
+    }
+    this.options = options
+    this.loadVideoSource(options.vid, options.pid)
   },
   onReady() {
-    this.playVideo({
-      'url': 'https://air.artools.cc/m3u8/9b/9b5f6384a69853a3016ea4850d3feeaa.m3u8',
-      "type": "hls",
-      "pic": "https://air.artools.cc/player-bg.jpeg",
-      // "thumbnails": "",
-    })
+    // this.playVideo({
+    //   // 'url': '',
+    //   // "type": "auto",
+    //   // "pic": "https://example.com/GTgmY9DcDOEAh5mMo.jpg",
+    //   // "thumbnails": "",
+    // })
   },
   onUnload() {
     this.clearPlayerConfig()
@@ -66,8 +92,6 @@ export default {
     playVideo(data) {
       this.clearPlayerConfig()
 
-      console.log('[playVideo.data]', data)
-
       this.dplayer.player = new DPlayer({
         container: this.$refs.dplayer,
         autoplay: true,
@@ -95,7 +119,7 @@ export default {
         console.log('[player pause]');
       })
       this.dplayer.player.on('play', () => {
-        // console.log('[player play]', this.dplayer.player);
+        console.log('[player play]', this.dplayer.player);
 
       })
       this.dplayer.player.on('playing', function () {
@@ -186,6 +210,17 @@ export default {
         "type": "hls",
       }
       this.playVideo(data)
+    },
+    loadVideoSource(vid, pid) {
+      httpRequest({
+        url: '/api/video/source',
+        method: 'GET',
+        data: { vid: vid, pid: pid, },
+        success: (resp) => {
+          this.videoSource = resp.data
+          this.playVideo(this.videoSource)
+        },
+      })
     },
   }
 }

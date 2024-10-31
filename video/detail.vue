@@ -23,7 +23,10 @@
         <view v-for="(item,idx) in groupLinks" :key="idx" class="group-link">
           <view class="name">{{ item.name }}</view>
           <view class="flex-row">
-            <view v-for="(link,idxLink) in item.links" :key="idxLink" class="link">
+            <view v-for="(link,idxLink) in item.links"
+                  :key="idxLink"
+                  class="link"
+                  @click="navigateToUrl(`/video/play?vid=${videoInfo.id}&pid=${link.id}&name=${encodeURIComponent(videoInfo.name)}`)">
               {{ link.name }}
             </view>
           </view>
@@ -65,6 +68,7 @@ export default {
     this.loadVideoInfo(options.id)
   },
   methods: {
+    navigateToUrl,
     loadVideoInfo(id) {
       httpRequest({
         url: '/api/video/detail',
@@ -72,52 +76,7 @@ export default {
         data: { id: id, },
         success: (resp) => {
           this.videoInfo = resp.data
-
-          // const dd = [
-          //   {
-          //     "id": "bXZfODQ5LW5tXzE=",
-          //     "name": "立即播放",
-          //     "url": "https://czzy.top/v_play/bXZfODQ5LW5tXzE=.html",
-          //     "group": "资源1"
-          //   }, {
-          //     "id": "bXZfODQ5LW5tXzE=",
-          //     "name": "立即播放",
-          //     "url": "https://czzy.top/v_play/bXZfODQ5LW5tXzE=.html",
-          //     "group": "资源1"
-          //   }, {
-          //     "id": "bXZfODQ5LW5tXzE=",
-          //     "name": "立即播放",
-          //     "url": "https://czzy.top/v_play/bXZfODQ5LW5tXzE=.html",
-          //     "group": "资源1"
-          //   }, {
-          //     "id": "bXZfODQ5LW5tXzE=",
-          //     "name": "立即播放",
-          //     "url": "https://czzy.top/v_play/bXZfODQ5LW5tXzE=.html",
-          //     "group": "资源1"
-          //   }, {
-          //     "id": "bXZfODQ5LW5tXzE=",
-          //     "name": "立即播放",
-          //     "url": "https://czzy.top/v_play/bXZfODQ5LW5tXzE=.html",
-          //     "group": "资源1"
-          //   }, {
-          //     "id": "bXZfODQ5LW5tXzE=",
-          //     "name": "立即播放",
-          //     "url": "https://czzy.top/v_play/bXZfODQ5LW5tXzE=.html",
-          //     "group": "资源2"
-          //   }, {
-          //     "id": "bXZfODQ5LW5tXzE=",
-          //     "name": "立即播放",
-          //     "url": "https://czzy.top/v_play/bXZfODQ5LW5tXzE=.html",
-          //     "group": "资源2"
-          //   }, {
-          //     "id": "bXZfODQ5LW5tXzE=",
-          //     "name": "立即播放",
-          //     "url": "https://czzy.top/v_play/bXZfODQ5LW5tXzE=.html",
-          //     "group": "资源8"
-          //   },
-          // ]
           this.groupLinks = handleGroupLinks(this.videoInfo.links)
-          // this.groupLinks = handleGroupLinks(dd)
         },
       })
     },
