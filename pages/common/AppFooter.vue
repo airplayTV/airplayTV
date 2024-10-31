@@ -2,10 +2,8 @@
   <view class="flex-column padding-30rpx flex-align-center footer color-grey">
 
     <view>
-      <uni-link
-          target="_blank"
-          font-size="16"
-          href="https://github.com/airplayTV">本站</uni-link>仅作学习案例展示，切勿用作任何其他用途！
+      <text class="href" @click="navigateToUrl('https://github.com/airplayTV')">本站</text>
+      仅作学习案例展示，切勿用作任何其他用途！
     </view>
     <view>
       本站资源均来源网络，侵权即删！
@@ -16,22 +14,26 @@
 
 <script>
 
+import {navigateToUrl} from "@/common/utils";
+
 export default {
+  name: 'AppFooter',
   data() {
     return {}
   },
   created() {
   },
-  methods: {}
+  methods: { navigateToUrl }
 }
 </script>
 
 <style scoped>
 .footer {
   line-height: 150%;
+  font-size: 24rpx;
 
-  a {
-    color: royalblue;
+  .href {
+    color: #8f8f8f;
   }
 }
 </style>

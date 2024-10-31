@@ -9,7 +9,7 @@
       </view>
     </view>
     <view>
-      <view style="width: 200rpx">
+      <view v-if="showProvider" style="width: 200rpx">
         <uni-data-select
             v-model="selectedProvider"
             :localdata="providerList"
@@ -26,7 +26,11 @@ import {getStorageSync, setStorageSync} from "@/common/utils";
 import {KEY_VIDEO_PROVIDERS, KEY_VIDEO_SOURCE, KEY_VIDEO_SOURCE_TAGS, KEY_VIDEO_TAG} from "@/common/constant";
 
 export default {
+  name: 'AppHeader',
   emits: ['onProviderChange'],
+  props: {
+    showProvider: Boolean,
+  },
   data() {
     return {
       sourceTags: [],

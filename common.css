@@ -6,6 +6,10 @@
     margin: 0 auto;
 }
 
+.padding-10rpx {
+    padding: 10rpx;
+}
+
 .padding-20rpx {
     padding: 20rpx;
 }
@@ -57,6 +61,17 @@
     text-overflow: ellipsis;
 }
 
+.text-ellipsis-5 {
+    display: -webkit-box;
+    overflow: hidden;
+    white-space: normal !important;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+
+}
+
 .hidden {
     display: none;
 }
@@ -65,9 +80,17 @@
     color: #999999;
 }
 
-.empty-box{
+.empty-box {
     display: flex;
     min-height: 400rpx;
     align-items: center;
     justify-content: center;
+}
+
+.line-height-150 {
+    line-height: 150%;
+}
+
+.line-height-180 {
+    line-height: 180%;
 }

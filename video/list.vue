@@ -1,6 +1,6 @@
 <template>
   <view class="container">
-    <Header @on-provider-change="onProviderChange"></Header>
+    <AppHeader show-provider @on-provider-change="onProviderChange"></AppHeader>
 
     <view class="padding-30rpx tags hidden">
       <text v-for="(tag,idx) in sourceTags" :key="idx" class="href">
@@ -9,8 +9,11 @@
     </view>
 
     <view class="padding-30rpx padding-no-bottom" v-if="videoList.total">
-      <view class="flex-row videos" >
-        <view class="flex-column flex-align-center item" v-for="(video,idx) in videoList.list" :key="idx">
+      <view class="flex-row videos">
+        <view
+            class="flex-column flex-align-center item"
+            v-for="(video,idx) in videoList.list"
+            :key="idx" @click="navigateToUrl(`/video/detail?id=${video.id}`)">
           <image class="thumb" :src="defaultCover" mode="aspectFill"></image>
           <view class="name text-ellipsis">{{ video.name }}</view>
         </view>
@@ -24,7 +27,7 @@
       <view class="padding-30rpx">暂无数据</view>
     </view>
 
-    <Footer></Footer>
+    <AppFooter/>
 
   </view>
 </template>
@@ -33,25 +36,23 @@
 import {httpRequest} from "@/common/api";
 import {getStorageSync, navigateToUrl} from "@/common/utils";
 import {KEY_VIDEO_PROVIDERS, KEY_VIDEO_SOURCE, KEY_VIDEO_SOURCE_TAGS, KEY_VIDEO_TAG} from "@/common/constant";
-import Header from '@/pages/common/header.vue'
-import Footer from '@/pages/common/footer.vue'
+import AppHeader from '@/pages/common/AppHeader.vue'
+import AppFooter from '@/pages/common/AppFooter.vue'
+import {defaultCover} from "@/config";
 
 export default {
   data() {
     return {
-      title: 'Hello',
       videoList: [],
       page: 1,
       sourceTags: [],
       providers: [],
-
       selectedProvider: null,
       providerList: [],
-      defaultCover: 'https://iph.href.lu/360x528?text=.&fg=bcbcbc&bg=eeeeee',
-
+      defaultCover: defaultCover,
     }
   },
-  components: { Header, Footer },
+  components: { AppHeader, AppFooter },
   onLoad() {
 
     this.sourceTags = getStorageSync(KEY_VIDEO_SOURCE_TAGS)

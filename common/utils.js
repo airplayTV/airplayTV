@@ -20,10 +20,39 @@ function hideLoading() {
   uni.hideLoading()
 }
 
+
+function handleGroupLinks(links) {
+  let groupLinks = []
+  let tmpGroups = []
+
+  if (links && links.length > 0) {
+    links.filter(item => {
+      if (!tmpGroups.includes(item.group)) {
+        tmpGroups.push(item.group)
+      }
+      if (!groupLinks[item.group]) {
+        groupLinks[item.group] = []
+      }
+      groupLinks[item.group].push(item)
+    })
+  }
+
+  tmpGroups = tmpGroups.map(item => {
+    return {
+      name: item,
+      links: groupLinks[item] ?? [],
+    }
+  })
+
+  return tmpGroups
+}
+
+
 export {
   getStorageSync,
   setStorageSync,
   navigateToUrl,
   showLoading,
   hideLoading,
+  handleGroupLinks,
 }
