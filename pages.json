@@ -31,6 +31,12 @@
 			}
 		},
 		{
+			"path": "video/list",
+			"style": {
+				"navigationBarTitleText": "视频列表"
+			}
+		},
+		{
 			"path": "video/detail",
 			"style": {
 				"navigationBarTitleText": "视频详情"

@@ -1,7 +1,7 @@
 import {apiUrl} from "@/config";
 import {send} from "@/common/websocket";
 import {KEY_VIDEO_SOURCE} from "@/common/constant";
-import {getStorageSync} from "@/common/utils";
+import {getStorageSync, hideLoading, showLoading} from "@/common/utils";
 
 const EventJoinGroup = 'joinGroup'
 const EventSendToClient = 'sendToClient'
@@ -29,6 +29,8 @@ function httpRequest(obj) {
   if (!obj.data) {
     obj.data = {}
   }
+
+  showLoading()
 
   obj.data._source = getStorageSync(KEY_VIDEO_SOURCE)
   uni.request({
@@ -58,7 +60,13 @@ function httpRequest(obj) {
       }
     },
     fail: obj.fail,
-    complete: obj.complete,
+    complete: () => {
+      hideLoading()
+
+      if (isFunction(obj.complete)) {
+        obj.complete()
+      }
+    },
   })
 }
 

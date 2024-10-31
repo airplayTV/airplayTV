@@ -1,6 +1,12 @@
 <script>
 
-import {KEY_FINGERPRINT, KEY_VIDEO_PROVIDERS, KEY_VIDEO_SOURCE, KEY_VIDEO_TAG,} from "@/common/constant";
+import {
+  KEY_FINGERPRINT,
+  KEY_VIDEO_PROVIDERS,
+  KEY_VIDEO_SOURCE,
+  KEY_VIDEO_SOURCE_TAGS,
+  KEY_VIDEO_TAG,
+} from "@/common/constant";
 import {connect} from "@/common/websocket";
 import {httpRequestAsync, joinGroup} from "@/common/api";
 import * as FingerprintJS from "@fingerprintjs/fingerprintjs";
@@ -80,7 +86,19 @@ export default {
         tag = providers.data[0]
       }
 
-      console.log('[defaultConfig]', source, tag)
+      let sourceTags = getStorageSync(KEY_VIDEO_SOURCE_TAGS)
+      if (!sourceTags) {
+        providers.data.filter(provider => {
+          if (source && provider.name === source) {
+            if (provider.tags) {
+              sourceTags = provider.tags
+              setStorageSync(KEY_VIDEO_SOURCE_TAGS, sourceTags)
+            }
+          }
+        })
+      }
+
+      console.log('[defaultConfig]', { source, tag, sourceTags })
     }
 
   },
