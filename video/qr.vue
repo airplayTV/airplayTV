@@ -42,7 +42,7 @@ export default {
       })
     },
     qrCode() {
-      const tmpUrl = `${joinRoomUrl}?room_id=${this.fingerprintId}&t=` + Date.now()
+      const tmpUrl = `${joinRoomUrl}/#/group/join?room=${this.fingerprintId}&ttt=uuu&t=` + Date.now()
       console.log('[tmpUrl]', tmpUrl)
       QRCode.toDataURL(tmpUrl, {
         errorCorrectionLevel: 'H',

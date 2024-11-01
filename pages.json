@@ -53,6 +53,18 @@
 			"style": {
 				"navigationBarTitleText": "遥控器"
 			}
+		},
+		{
+			"path": "video/qr",
+			"style": {
+				"navigationBarTitleText": "扫码"
+			}
+		},
+		{
+			"path": "group/join",
+			"style": {
+				"navigationBarTitleText": "加入组"
+			}
 		}
 	],
 	"globalStyle": {

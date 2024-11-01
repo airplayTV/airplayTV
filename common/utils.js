@@ -51,6 +51,13 @@ function handleGroupLinks(links) {
   return tmpGroups
 }
 
+function trimPrefixSlash(str) {
+  return str.trim().replace(new RegExp(`^\/+`, 'g'), '');
+}
+
+function trimSuffixSlash(str) {
+  return str.trim().replace(new RegExp(`\/+$`, 'g'), '');
+}
 
 export {
   getStorageSync,
@@ -60,4 +67,6 @@ export {
   hideLoading,
   showToast,
   handleGroupLinks,
+  trimPrefixSlash,
+  trimSuffixSlash,
 }
