@@ -10,7 +10,7 @@
         <!-- 四个按钮 -->
         <view class="flex-row flex-justify-between">
           <!-- 静音 -->
-          <view>
+          <view @click="sendControl({event:'mute'})">
             <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5668">
               <path
@@ -23,7 +23,7 @@
           </view>
 
           <!-- 全屏 -->
-          <view>
+          <view @click="sendControl({event:'fullscreen'})">
             <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="11590">
               <path
@@ -36,7 +36,7 @@
           </view>
 
           <!-- 二维码 -->
-          <view>
+          <view @click="sendControl({event:'qrCode'})">
             <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="31233">
               <path
@@ -49,7 +49,7 @@
           </view>
 
           <!-- 信息 -->
-          <view>
+          <view @click="sendControl({event:'info'})">
             <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4191">
               <path
@@ -63,7 +63,7 @@
         <view class="padding-30rpx"></view>
 
         <!-- 声音小 -->
-        <view class="flex-row flex-justify-center">
+        <view class="flex-row flex-justify-center" @click="sendControl({event:'volume',value:-1})">
           <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6000">
             <path
@@ -80,7 +80,7 @@
         <view class="flex-row flex-justify-between">
 
           <!-- 后退 -->
-          <view>
+          <view @click="sendControl({event:'back'})">
             <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5854">
               <path
@@ -94,7 +94,7 @@
 
           <!-- 播放/暂停 -->
           <view>
-            <view v-if="false">
+            <view v-if="false" @click="sendControl({event:'play'})">
               <svg class="icon"
                    style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                    viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8206">
@@ -104,7 +104,7 @@
               </svg>
             </view>
 
-            <view>
+            <view @click="sendControl({event:'pause'})">
               <svg class="icon"
                    style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                    viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6935">
@@ -117,7 +117,7 @@
           </view>
 
           <!-- 前进 -->
-          <view>
+          <view @click="sendControl({event:'forward'})">
             <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6819">
               <path
@@ -135,7 +135,7 @@
         <view class="padding-30rpx"></view>
 
         <!-- 声音大 -->
-        <view class="flex-row flex-justify-center">
+        <view class="flex-row flex-justify-center" @click="sendControl({event:'volume',value:1})">
           <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6015">
             <path
@@ -157,6 +157,8 @@
 import AppHeader from "@/pages/common/AppHeader.vue";
 import AppFooter from "@/pages/common/AppFooter.vue";
 import {httpRequest} from "@/common/api";
+import {getStorageSync, showToast} from "@/common/utils";
+import {KEY_FINGERPRINT} from "@/common/constant";
 
 export default {
   components: { AppFooter, AppHeader },
@@ -166,15 +168,22 @@ export default {
   onLoad() {
   },
   methods: {
-    //api/video/airplay
-    sendControl() {
+    sendControl(data) {
+      console.log('[sendControl.data]', data)
+      let post = {
+        group: getStorageSync(KEY_FINGERPRINT),
+        event: data.event,
+        value: data.value,
+      }
       httpRequest({
-        url: '/api/video/airplay',
-        method: 'GET',
-        data: { vid: vid, pid: pid, },
+        url: '/api/video/control',
+        method: 'post',
+        data: post,
         success: (resp) => {
-          this.videoSource = resp.data
-          this.playVideo(this.videoSource)
+          console.log('[control]', resp)
+          showToast('发送成功' + Date.now())
+          // this.videoSource = resp.data
+          // this.playVideo(this.videoSource)
         },
       })
     },

@@ -20,6 +20,10 @@ function hideLoading() {
   uni.hideLoading()
 }
 
+function showToast(title, config = { duration: 3000, icon: 'none' }) {
+  uni.showToast(Object.assign(config, { title: title }));
+}
+
 
 function handleGroupLinks(links) {
   let groupLinks = []
@@ -54,5 +58,6 @@ export {
   navigateToUrl,
   showLoading,
   hideLoading,
+  showToast,
   handleGroupLinks,
 }

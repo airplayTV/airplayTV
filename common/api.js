@@ -37,6 +37,7 @@ function httpRequest(obj) {
     url: obj.url,
     data: obj.data,
     header: obj.header,
+    method: obj.method,
     timeout: obj.timeout,
     dataType: obj.dataType,
     responseType: obj.responseType,
