@@ -5,7 +5,10 @@
     <view class="padding-30rpx">
       <view class="padding-30rpx controls">
 
-        <view class="padding-30rpx"></view>
+        <view v-if="room">
+          房间：{{ room }}
+        </view>
+        <view class="padding-20rpx"></view>
 
         <!-- 四个按钮 -->
         <view class="flex-row flex-justify-between">
