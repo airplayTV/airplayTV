@@ -8,6 +8,7 @@
         <view class="padding-20rpx padding-no-bottom">
           <image class="thumb" :src="videoInfo.thumb" mode="aspectFill"></image>
           <!-- videoInfo.thumb -->
+          <!-- defaultCover -->
         </view>
       </view>
       <view class="padding-30rpx padding-no-bottom">

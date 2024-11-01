@@ -15,6 +15,8 @@
             v-for="(video,idx) in videoList.list"
             :key="idx" @click="navigateToUrl(`/video/detail?id=${video.id}`)">
           <image class="thumb" :src="video.thumb" mode="aspectFill"></image>
+          <!-- video.thumb -->
+          <!-- defaultCover -->
           <view class="name text-ellipsis">{{ video.name }}</view>
         </view>
       </view>

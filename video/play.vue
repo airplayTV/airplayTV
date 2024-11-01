@@ -7,8 +7,11 @@
       {{ options.name ?? videoSource.name }}
     </view>
 
-    <view class="padding-20rpx">
+    <view class="padding-20rpx padding-no-bottom">
       <div id="dplayer" class="dplayer" ref="dplayer"></div>
+    </view>
+    <view v-if="videoSource" class="padding-20rpx padding-no-bottom color-grey source-url">
+      视频地址：{{ videoSource.url }}
     </view>
 
     <AppFooter />
@@ -249,6 +252,11 @@ export default {
 
 .dplayer {
   width: 100%;
+}
+
+.source-url {
+  word-wrap: break-word;
+  font-size: 26rpx;
 }
 
 </style>

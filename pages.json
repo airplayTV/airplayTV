@@ -47,6 +47,12 @@
 			"style": {
 				"navigationBarTitleText": "视频播放"
 			}
+		},
+		{
+			"path": "video/controls",
+			"style": {
+				"navigationBarTitleText": "遥控器"
+			}
 		}
 	],
 	"globalStyle": {
