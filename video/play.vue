@@ -9,7 +9,8 @@
 
     <view class="padding-20rpx padding-no-bottom">
       <div v-show="defaultPlayer" id="dplayer" class="dplayer" ref="dplayer"></div>
-      <iframe v-show="!defaultPlayer&&videoSource" class="iframe" :src="libmediaAvpConfig"></iframe>
+      <iframe v-show="!defaultPlayer&&videoSource" class="iframe" :src="libmediaAvpConfig"
+              :key="libmediaAvpConfig"></iframe>
 
       <view class="padding-10rpx"></view>
 
@@ -199,7 +200,7 @@ export default {
       if (this.defaultPlayer) {
         this.playVideo(this.videoSource)
       } else {
-        const config = btoa(JSON.stringify({ url: this.videoSource.url }))
+        const config = btoa(JSON.stringify({ url: this.videoSource.url, _t: Date.now() }))
         this.libmediaAvpConfig = `${libmediaAvpUrl}?config=${config}`
       }
     },
