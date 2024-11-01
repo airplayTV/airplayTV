@@ -20,7 +20,7 @@ export default {
     // 连接websocket
     uni.$on('onWebsocketOpen', () => {
       console.log('[onWebsocketOpen]')
-      joinGroup(uni.getStorageSync(KEY_FINGERPRINT))
+      joinGroup(getStorageSync(KEY_FINGERPRINT))
     })
     uni.$on('onWebsocketClose', () => {
       console.log('[onWebsocketClose]')

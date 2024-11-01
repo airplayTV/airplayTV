@@ -158,20 +158,27 @@ import AppHeader from "@/pages/common/AppHeader.vue";
 import AppFooter from "@/pages/common/AppFooter.vue";
 import {httpRequest} from "@/common/api";
 import {getStorageSync, showToast} from "@/common/utils";
-import {KEY_FINGERPRINT} from "@/common/constant";
+import {KEY_ROOM_ID} from "@/common/constant";
 
 export default {
   components: { AppFooter, AppHeader },
   data() {
-    return {}
+    return {
+      room: null,
+    }
   },
   onLoad() {
+    this.room = getStorageSync(KEY_ROOM_ID)
   },
   methods: {
     sendControl(data) {
+      if (!this.room) {
+        showToast('未加入任何房间')
+        return
+      }
       console.log('[sendControl.data]', data)
       let post = {
-        group: getStorageSync(KEY_FINGERPRINT),
+        group: this.room,
         event: data.event,
         value: data.value,
       }
