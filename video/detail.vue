@@ -20,6 +20,14 @@
         </view>
       </view>
 
+      <view class="padding-30rpx padding-no-bottom color-grey line-height-150">
+        <view>如果关联了房间将会投射播放，否则直接播放</view>
+        <view v-if="joinedRoom" class="flex-row">
+          已关联房间：
+          <text style="max-width: 300rpx;" class="text-ellipsis">{{ joinedRoom }}</text>
+        </view>
+      </view>
+
       <view class="padding-30rpx group-links line-height-180">
         <view v-for="(item,idx) in groupLinks" :key="idx" class="group-link">
           <view class="name">{{ item.name }}</view>
@@ -27,7 +35,7 @@
             <view v-for="(link,idxLink) in item.links"
                   :key="idxLink"
                   class="link"
-                  @click="navigateToUrl(`/video/play?vid=${videoInfo.id}&pid=${link.id}&name=${encodeURIComponent(videoInfo.name)}`)">
+                  @click="onClickPlay(link)">
               {{ link.name }}
             </view>
           </view>
@@ -47,11 +55,12 @@
 </template>
 
 <script>
-import {httpRequest} from "@/common/api";
-import {handleGroupLinks, navigateToUrl} from "@/common/utils";
+import {httpRequest, sendToGroup} from "@/common/api";
+import {getStorageSync, handleGroupLinks, navigateToUrl} from "@/common/utils";
 import {defaultCover} from "@/config";
 import AppHeader from '@/pages/common/AppHeader.vue'
 import AppFooter from '@/pages/common/AppFooter.vue'
+import {CONTROL_LOAD_VIDEO, KEY_FINGERPRINT, KEY_ROOM_ID} from "@/common/constant";
 
 export default {
   components: { AppHeader, AppFooter },
@@ -60,16 +69,23 @@ export default {
       defaultCover: defaultCover,
       videoInfo: null,
       groupLinks: [],
+      joinedRoom: null,
     }
   },
   onLoad(options) {
     if (!options.id) {
       navigateToUrl('/video/list?from-detail-empty-id')
     }
+    this.checkJoinedRoom()
     this.loadVideoInfo(options.id)
   },
   methods: {
     navigateToUrl,
+    checkJoinedRoom() {
+      if (getStorageSync(KEY_FINGERPRINT) !== getStorageSync(KEY_ROOM_ID)) {
+        this.joinedRoom = getStorageSync(KEY_ROOM_ID)
+      }
+    },
     loadVideoInfo(id) {
       httpRequest({
         url: '/api/video/detail',
@@ -80,6 +96,21 @@ export default {
           this.groupLinks = handleGroupLinks(this.videoInfo.links)
         },
       })
+    },
+    onClickPlay(link) {
+      if (this.joinedRoom) {
+        sendToGroup({
+          event: CONTROL_LOAD_VIDEO,
+          group: this.joinedRoom,
+          vid: this.videoInfo.id,
+          pid: link.id,
+          name: this.videoInfo.name,
+        })
+        navigateToUrl('/video/controls')
+      } else {
+        navigateToUrl(`/video/play?vid=${this.videoInfo.id}&pid=${link.id}&name=${encodeURIComponent(this.videoInfo.name)}`)
+      }
+
     },
   }
 }

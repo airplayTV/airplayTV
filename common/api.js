@@ -12,7 +12,13 @@ const EventListGroupClient = 'listGroupClient'
 
 function joinGroup(groupName) {
   return send({
-    data: JSON.stringify({ event: EventJoinGroup, data: groupName }),
+    data: JSON.stringify({ group: groupName, event: EventJoinGroup, data: null }),
+  })
+}
+
+function sendToGroup(data) {
+  return send({
+    data: JSON.stringify({ group: data.group, event: EventSendToGroup, data: data, }),
   })
 }
 
@@ -89,6 +95,7 @@ async function httpRequestSync(obj) {
 
 export {
   joinGroup,
+  sendToGroup,
   httpRequest,
   httpRequestAsync,
   httpRequestSync,

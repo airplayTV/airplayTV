@@ -5,9 +5,9 @@
     <view class="padding-30rpx">
 
       <view class="padding-10rpx"></view>
-      <view v-if="room" class="flex-row flex-justify-between flex-align-center">
+      <view v-if="room" class="flex-row flex-justify-between flex-align-center color-grey">
         <view class="flex-row">
-          <text>房间：</text>
+          <text>当前房间：</text>
           <text class="text-ellipsis" style="max-width: 300rpx;">{{ room }}</text>
 
         </view>
@@ -31,7 +31,7 @@
         <!-- 四个按钮 -->
         <view class="flex-row flex-justify-between">
           <!-- 静音 -->
-          <view @click="sendControl({event:'mute'})">
+          <view @click="sendControl({event:CONTROL_MUTE})">
             <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5668">
               <path
@@ -44,7 +44,7 @@
           </view>
 
           <!-- 全屏 -->
-          <view @click="sendControl({event:'fullscreen'})">
+          <view @click="sendControl({event:CONTROL_FULLSCREEN})">
             <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="11590">
               <path
@@ -57,7 +57,7 @@
           </view>
 
           <!-- 二维码 -->
-          <view @click="sendControl({event:'qrCode'})">
+          <view @click="sendControl({event:CONTROL_QRCODE})">
             <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="31233">
               <path
@@ -70,7 +70,7 @@
           </view>
 
           <!-- 信息 -->
-          <view @click="sendControl({event:'info'})">
+          <view @click="sendControl({event:CONTROL_INFO})">
             <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4191">
               <path
@@ -84,7 +84,7 @@
         <view class="padding-30rpx"></view>
 
         <!-- 声音小 -->
-        <view class="flex-row flex-justify-center" @click="sendControl({event:'volume',value:-1})">
+        <view class="flex-row flex-justify-center" @click="sendControl({event:CONTROL_VOLUME,value:-1})">
           <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6000">
             <path
@@ -101,7 +101,7 @@
         <view class="flex-row flex-justify-between">
 
           <!-- 后退 -->
-          <view @click="sendControl({event:'back'})">
+          <view @click="sendControl({event:CONTROL_BACK})">
             <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5854">
               <path
@@ -115,7 +115,7 @@
 
           <!-- 播放/暂停 -->
           <view>
-            <view v-if="false" @click="sendControl({event:'play'})">
+            <view v-if="false" @click="sendControl({event:CONTROL_PLAY})">
               <svg class="icon"
                    style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                    viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8206">
@@ -125,7 +125,7 @@
               </svg>
             </view>
 
-            <view @click="sendControl({event:'pause'})">
+            <view @click="sendControl({event:CONTROL_PAUSE})">
               <svg class="icon"
                    style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                    viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6935">
@@ -138,7 +138,7 @@
           </view>
 
           <!-- 前进 -->
-          <view @click="sendControl({event:'forward'})">
+          <view @click="sendControl({event:CONTROL_FORWARD})">
             <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6819">
               <path
@@ -156,7 +156,7 @@
         <view class="padding-30rpx"></view>
 
         <!-- 声音大 -->
-        <view class="flex-row flex-justify-center" @click="sendControl({event:'volume',value:1})">
+        <view class="flex-row flex-justify-center" @click="sendControl({event:CONTROL_VOLUME,value:1})">
           <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6015">
             <path
@@ -177,19 +177,43 @@
 <script>
 import AppHeader from "@/pages/common/AppHeader.vue";
 import AppFooter from "@/pages/common/AppFooter.vue";
-import {httpRequest} from "@/common/api";
+import {sendToGroup} from "@/common/api";
 import {getStorageSync, navigateToUrl, removeStorageSync, showToast} from "@/common/utils";
-import {KEY_ROOM_ID} from "@/common/constant";
+import {
+  CONTROL_BACK,
+  CONTROL_FORWARD,
+  CONTROL_FULLSCREEN,
+  CONTROL_INFO,
+  CONTROL_MUTE,
+  CONTROL_PAUSE,
+  CONTROL_PLAY,
+  CONTROL_QRCODE,
+  CONTROL_VOLUME,
+  KEY_CLIENT_ID,
+  KEY_ROOM_ID
+} from "@/common/constant";
 
 export default {
   components: { AppFooter, AppHeader },
   data() {
     return {
       room: null,
+      clientId: null,
+
+      CONTROL_MUTE: CONTROL_MUTE,
+      CONTROL_FULLSCREEN: CONTROL_FULLSCREEN,
+      CONTROL_QRCODE: CONTROL_QRCODE,
+      CONTROL_INFO: CONTROL_INFO,
+      CONTROL_VOLUME: CONTROL_VOLUME,
+      CONTROL_BACK: CONTROL_BACK,
+      CONTROL_PLAY: CONTROL_PLAY,
+      CONTROL_PAUSE: CONTROL_PAUSE,
+      CONTROL_FORWARD: CONTROL_FORWARD,
     }
   },
   onLoad() {
     this.room = getStorageSync(KEY_ROOM_ID)
+    this.clientId = getStorageSync(KEY_CLIENT_ID)
   },
   methods: {
     sendControl(data) {
@@ -202,18 +226,27 @@ export default {
         group: this.room,
         event: data.event,
         value: data.value,
+        from: this.clientId,
       }
-      httpRequest({
-        url: '/api/video/control',
-        method: 'post',
-        data: post,
-        success: (resp) => {
-          console.log('[control]', resp)
-          showToast('发送成功' + Date.now())
-          // this.videoSource = resp.data
-          // this.playVideo(this.videoSource)
-        },
-      })
+      console.log('[post]', post)
+      if (!sendToGroup(post)) {
+        showToast('发送失败：网络异常')
+        return;
+      }
+
+      showToast('发送成功')
+
+      // httpRequest({
+      //   url: '/api/video/control',
+      //   method: 'post',
+      //   data: post,
+      //   success: (resp) => {
+      //     console.log('[control]', resp)
+      //     showToast('发送成功' + Date.now())
+      //     // this.videoSource = resp.data
+      //     // this.playVideo(this.videoSource)
+      //   },
+      // })
     },
     onClickQuitRoom() {
       removeStorageSync(KEY_ROOM_ID)

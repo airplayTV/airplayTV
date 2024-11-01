@@ -1,4 +1,6 @@
 import {websocketAddr} from "@/config";
+import {navigateToUrl, setStorageSync} from "@/common/utils";
+import {CONTROL_LOAD_VIDEO, KEY_CLIENT_ID} from "@/common/constant";
 
 let isConnecting = false
 let socketHandler = null
@@ -33,10 +35,8 @@ function connect() {
   socketHandler.onMessage(function (result) {
     try {
       const data = JSON.parse(result.data)
+      handleWebsocketEvent(data.event, data)
       uni.$emit('onWebsocketMessage', data)
-      console.log('[onWebsocketMessage]', data)
-
-
     } catch (e) {
       console.log('[onWebsocketMessageParseError]', { result, e })
     }
@@ -61,12 +61,13 @@ function close() {
 }
 
 function handleWebsocketEvent(event, data) {
+  console.log('[handleWebsocketEvent]', event, data)
   switch (event) {
-    case 'event1':
+    case 'connect':
+      setStorageSync(KEY_CLIENT_ID, data.client_id)
       break;
-    case 'event2':
-      break;
-    case 'event3':
+    case CONTROL_LOAD_VIDEO:
+      navigateToUrl(`/video/play?vid=${data.vid}&pid=${data.pid}&name=${encodeURIComponent(data.name)}&_t=${Date.now()}`)
       break;
   }
 }

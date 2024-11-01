@@ -2,6 +2,7 @@
 
 import {
   KEY_FINGERPRINT,
+  KEY_ROOM_ID,
   KEY_VIDEO_PROVIDERS,
   KEY_VIDEO_SOURCE,
   KEY_VIDEO_SOURCE_TAGS,
@@ -21,6 +22,7 @@ export default {
     uni.$on('onWebsocketOpen', () => {
       console.log('[onWebsocketOpen]')
       joinGroup(getStorageSync(KEY_FINGERPRINT))
+      joinGroup(getStorageSync(KEY_ROOM_ID))
     })
     uni.$on('onWebsocketClose', () => {
       console.log('[onWebsocketClose]')
