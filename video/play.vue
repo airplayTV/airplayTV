@@ -8,33 +8,43 @@
     </view>
 
     <view class="padding-20rpx padding-no-bottom">
-      <div id="dplayer" class="dplayer" ref="dplayer"></div>
+      <div v-show="defaultPlayer" id="dplayer" class="dplayer" ref="dplayer"></div>
+      <iframe v-show="!defaultPlayer&&videoSource" class="iframe" :src="libmediaAvpConfig"></iframe>
+
+      <view class="padding-10rpx"></view>
+
+      <view v-if="videoSource" class="flex-row flex-align-center" @click="onClickChangePlayer">
+        <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
+             viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6417">
+          <path
+              d="M609.834667 97.834667a42.666667 42.666667 0 0 1 60.330666 0l170.666667 170.666666a42.666667 42.666667 0 0 1 0 60.330667l-170.666667 170.666667a42.666667 42.666667 0 0 1-60.330666-60.330667L707.669333 341.333333H213.333333a42.666667 42.666667 0 0 1 0-85.333333h494.336l-97.834666-97.834667a42.666667 42.666667 0 0 1 0-60.330666z m-195.669334 426.666666a42.666667 42.666667 0 0 1 0 60.330667L316.330667 682.666667H810.666667a42.666667 42.666667 0 1 1 0 85.333333H316.330667l97.834666 97.834667a42.666667 42.666667 0 0 1-60.330666 60.330666l-170.666667-170.666666a42.666667 42.666667 0 0 1 0-60.330667l170.666667-170.666667a42.666667 42.666667 0 0 1 60.330666 0z"
+              fill="#0D0D0D" p-id="6418"></path>
+        </svg>
+        <text v-if="defaultPlayer">切换播放器（libmedia）</text>
+        <text v-else>切换播放器（dplayer）</text>
+      </view>
     </view>
     <view v-if="videoSource" class="padding-20rpx padding-no-bottom color-grey source-url">
       视频地址：{{ videoSource.url }}
     </view>
 
     <AppFooter />
-
   </view>
-
 </template>
 
 <script>
-import QRCode from "qrcode";
 import {QrcodeCapture, QrcodeDropZone, QrcodeStream} from 'vue-qrcode-reader'
-import {KEY_CLIENT_ID} from "@/common/constant";
 import DPlayer from 'dplayer';
 import Hls from 'hls.js';
 import AppHeader from "@/pages/common/AppHeader.vue";
 import AppFooter from "@/pages/common/AppFooter.vue";
 import {httpRequest} from "@/common/api";
 import {navigateToUrl} from "@/common/utils";
+import {libmediaAvpUrl} from "@/config";
 
 export default {
   data() {
     return {
-      title: 'Hello QR',
       qrCodeUrl: null,
       clientId: null,
       dplayer: {
@@ -44,6 +54,8 @@ export default {
       },
       options: null,
       videoSource: null,
+      defaultPlayer: true,
+      libmediaAvpConfig: '',
     }
   },
   components: {
@@ -72,26 +84,6 @@ export default {
     this.clearPlayerConfig()
   },
   methods: {
-    qrCode() {
-      const tmpUrl = `https://air.artools.cc/mobile/?version=v2&tv_id=${this.clientId}&t=` + Date.now()
-      QRCode.toDataURL(tmpUrl, {
-        errorCorrectionLevel: 'H',
-        type: 'image/jpeg',
-        quality: 0.3,
-        width: 300
-      }).then(url => {
-        // console.log(url)
-        this.qrCodeUrl = url
-      }).catch(err => {
-        console.error(err)
-      })
-    },
-    loadClientId() {
-      this.clientId = uni.getStorageSync(KEY_CLIENT_ID)
-    },
-    onDetect(detectedCodes) {
-      console.log('[detectedCodes]', detectedCodes)
-    },
     playVideo(data) {
       this.clearPlayerConfig()
 
@@ -191,29 +183,6 @@ export default {
         this.dplayer.player.destroy();
       }
     },
-    onClickPlay() {
-      const aaa = {
-        "id": "bXZfNTY3OTQtbm1fMQ==",
-        "vid": "",
-        "name": "",
-        "source": "https://wangchuanxin.top/m3/NIDBpweufkTkIyA58AvdyagzkEPt4CPi4QZ3fWoZqN2WbvfIa1GXLhWRPq6vqRd_wh_cHANSPxVScPdGpskI-lAYUULBDQzuNqdABloSvXo.m3u8",
-        "url": "/m3u8/f6/f6fe20f9fc9cec206fb2501b0c2013c9.m3u8",
-        "type": "hls",
-        "thumb": ""
-      }
-
-      this.playVideo({
-        url: 'xhttps://air.artools.cc/m3u8/cb/cb63a4e7e943b61b918a123986573f68.m3u8',
-        "type": "hls",
-      })
-    },
-    switchVideo() {
-      const data = {
-        'url': 'https://air.artools.cc/m3u8/cb/cb63a4e7e943b61b918a123986573f68.m3u8',
-        "type": "hls",
-      }
-      this.playVideo(data)
-    },
     loadVideoSource(vid, pid) {
       httpRequest({
         url: '/api/video/source',
@@ -225,38 +194,49 @@ export default {
         },
       })
     },
+    onClickChangePlayer() {
+      this.defaultPlayer = !this.defaultPlayer
+      if (this.defaultPlayer) {
+        this.playVideo(this.videoSource)
+      } else {
+        const config = btoa(JSON.stringify({ url: this.videoSource.url }))
+        this.libmediaAvpConfig = `${libmediaAvpUrl}?config=${config}`
+      }
+    },
   }
 }
 </script>
 
 <style scoped>
-.content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #000000;
-}
-
-.qr {
-  height: 600rpx;
-  width: 600rpx;
-  margin-top: 150rpx;
-  margin-bottom: 50rpx;
-}
-
-.title {
-  font-size: 36rpx;
-  color: #8f8f94;
-}
 
 .dplayer {
   width: 100%;
 }
 
+.iframe {
+  border: 0;
+  width: 100%;
+  height: fit-content;
+}
+
+/* 针对IE和Edge */
+iframe {
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+/* 针对Firefox */
+iframe {
+  scrollbar-width: none; /* Firefox 64 */
+}
+
+/* 针对Chrome, Safari 和 Opera */
+iframe::-webkit-scrollbar {
+  display: none;
+}
+
 .source-url {
   word-wrap: break-word;
-  font-size: 26rpx;
+  font-size: 14px;
 }
 
 </style>

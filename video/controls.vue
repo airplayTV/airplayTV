@@ -156,6 +156,7 @@
 <script>
 import AppHeader from "@/pages/common/AppHeader.vue";
 import AppFooter from "@/pages/common/AppFooter.vue";
+import {httpRequest} from "@/common/api";
 
 export default {
   components: { AppFooter, AppHeader },
@@ -164,7 +165,20 @@ export default {
   },
   onLoad() {
   },
-  methods: {}
+  methods: {
+    //api/video/airplay
+    sendControl() {
+      httpRequest({
+        url: '/api/video/airplay',
+        method: 'GET',
+        data: { vid: vid, pid: pid, },
+        success: (resp) => {
+          this.videoSource = resp.data
+          this.playVideo(this.videoSource)
+        },
+      })
+    },
+  }
 }
 </script>
 
