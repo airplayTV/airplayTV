@@ -3,11 +3,29 @@
     <AppHeader />
 
     <view class="padding-30rpx">
-      <view class="padding-30rpx controls">
 
-        <view v-if="room">
-          房间：{{ room }}
+      <view class="padding-10rpx"></view>
+      <view v-if="room" class="flex-row flex-justify-between flex-align-center">
+        <view class="flex-row">
+          <text>房间：</text>
+          <text class="text-ellipsis" style="max-width: 300rpx;">{{ room }}</text>
+
         </view>
+        <view class="room-quit flex-row flex-align-center" @click="onClickQuitRoom">
+          退出&nbsp;
+          <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
+               viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2924">
+            <path
+                d="M832 16A176 176 0 0 1 1008 192a48 48 0 0 1-95.552 6.528L912 192a80 80 0 0 0-71.808-79.616L832 112H192a80 80 0 0 0-79.616 71.808L112 192v640c0 41.408 31.488 75.52 71.808 79.616L192 912h640a80 80 0 0 0 79.616-71.808L912 832a48 48 0 1 1 96 0 176 176 0 0 1-165.248 175.68L832 1008H192a176 176 0 0 1-175.68-165.248L16 832V192A176 176 0 0 1 181.248 16.32L192 16h640z m-67.84 280.256L967.68 499.84a48 48 0 0 1 0 67.84l-203.648 203.648a48 48 0 1 1-67.84-67.84L823.68 576H368a48 48 0 0 1 0-96h444.096l-115.84-115.84a48 48 0 1 1 67.84-67.904z"
+                fill="#45454D" p-id="2925"></path>
+          </svg>
+        </view>
+      </view>
+      <view v-else class="color-grey">
+        尚未加入任何房间，无法遥控操作
+      </view>
+
+      <view class="padding-30rpx controls">
         <view class="padding-20rpx"></view>
 
         <!-- 四个按钮 -->
@@ -160,7 +178,7 @@
 import AppHeader from "@/pages/common/AppHeader.vue";
 import AppFooter from "@/pages/common/AppFooter.vue";
 import {httpRequest} from "@/common/api";
-import {getStorageSync, showToast} from "@/common/utils";
+import {getStorageSync, navigateToUrl, removeStorageSync, showToast} from "@/common/utils";
 import {KEY_ROOM_ID} from "@/common/constant";
 
 export default {
@@ -197,6 +215,10 @@ export default {
         },
       })
     },
+    onClickQuitRoom() {
+      removeStorageSync(KEY_ROOM_ID)
+      navigateToUrl('/')
+    },
   }
 }
 </script>
@@ -212,6 +234,10 @@ export default {
     color: #000000;
     fill: #000000;
   }
+}
+
+.room-quit {
+//color: #ffffff; //background-color: #007aff; //border-radius: 8rpx; //padding: 6rpx 16rpx;
 }
 
 </style>

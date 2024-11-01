@@ -8,6 +8,10 @@ function setStorageSync(key, data) {
   return uni.setStorageSync(key, data)
 }
 
+function removeStorageSync(key) {
+  return uni.removeStorageSync(key)
+}
+
 function navigateToUrl(url) {
   uni.navigateTo({ url: url })
 }
@@ -62,6 +66,7 @@ function trimSuffixSlash(str) {
 export {
   getStorageSync,
   setStorageSync,
+  removeStorageSync,
   navigateToUrl,
   showLoading,
   hideLoading,

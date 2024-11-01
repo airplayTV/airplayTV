@@ -1,10 +1,18 @@
 <template>
-  <view class="content">
-    <image class="qr" :src="qrCodeUrl"></image>
-    <view class="text-area">
-      <view>扫码投射</view>
-      <view>房间号：{{ fingerprintId }}</view>
+  <view class="container">
+    <AppHeader/>
+
+    <view class="padding-30rpx"></view>
+
+    <view class="flex-column flex-justify-center flex-align-center">
+      <image class="qr" :src="qrCodeUrl"></image>
+      <view class="text-area">
+        <view>扫码投射</view>
+        <view>房间号：{{ fingerprintId }}</view>
+      </view>
     </view>
+
+    <AppFooter/>
 
   </view>
 </template>
@@ -14,8 +22,11 @@ import {send} from '@/common/websocket'
 import QRCode from "qrcode";
 import {KEY_CLIENT_ID, KEY_FINGERPRINT} from "@/common/constant";
 import {joinRoomUrl} from "@/config";
+import AppHeader from "@/pages/common/AppHeader.vue";
+import AppFooter from "@/pages/common/AppFooter.vue";
 
 export default {
+  components: { AppFooter, AppHeader },
   data() {
     return {
       title: 'Hello QR',
@@ -76,13 +87,12 @@ export default {
 .qr {
   height: 600rpx;
   width: 600rpx;
-  margin-bottom: 30rpx;
 }
 
 .text-area {
-  font-size: 36rpx;
+  font-size: 14px;
   color: #8f8f94;
-  line-height: 180%;
+  line-height: 150%;
   text-align: center;
 }
 
