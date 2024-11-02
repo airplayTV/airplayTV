@@ -1,6 +1,18 @@
 import {websocketAddr} from "@/config";
 import {navigateToUrl, setStorageSync} from "@/common/utils";
-import {CONTROL_LOAD_VIDEO, KEY_CLIENT_ID} from "@/common/constant";
+import {
+  CONTROL_BACK,
+  CONTROL_FORWARD,
+  CONTROL_FULLSCREEN,
+  CONTROL_INFO,
+  CONTROL_LOAD_VIDEO,
+  CONTROL_MUTE,
+  CONTROL_PAUSE,
+  CONTROL_PLAY,
+  CONTROL_QRCODE,
+  CONTROL_VOLUME,
+  KEY_CLIENT_ID
+} from "@/common/constant";
 
 let isConnecting = false
 let socketHandler = null
@@ -67,7 +79,18 @@ function handleWebsocketEvent(event, data) {
       setStorageSync(KEY_CLIENT_ID, data.client_id)
       break;
     case CONTROL_LOAD_VIDEO:
-      navigateToUrl(`/video/play?vid=${data.vid}&pid=${data.pid}&name=${encodeURIComponent(data.name)}&_t=${Date.now()}`)
+      navigateToUrl(`/video/play?vid=${data.vid}&pid=${data.pid}&_t=${Date.now()}&name=${encodeURIComponent(data.name)}`)
+      break;
+    case CONTROL_MUTE:
+    case CONTROL_FULLSCREEN:
+    case CONTROL_QRCODE:
+    case CONTROL_INFO:
+    case CONTROL_VOLUME:
+    case CONTROL_BACK:
+    case CONTROL_PLAY:
+    case CONTROL_PAUSE:
+    case CONTROL_FORWARD:
+      uni.$emit('onControlEvent', data)
       break;
   }
 }

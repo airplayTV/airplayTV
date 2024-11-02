@@ -115,7 +115,17 @@
 
           <!-- 播放/暂停 -->
           <view>
-            <view v-if="false" @click="sendControl({event:CONTROL_PLAY})">
+
+            <view v-if="isPlay" @click="sendControl({event:CONTROL_PAUSE})">
+              <svg class="icon"
+                   style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
+                   viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6935">
+                <path
+                    d="M341.333333 853.333333C170.666667 786.090667 170.666667 237.909333 341.333333 170.666667c170.666667-67.242667 512 170.666667 512 341.333333s-341.333333 408.576-512 341.333333z"
+                    fill="#000000" p-id="6936"></path>
+              </svg>
+            </view>
+            <view v-else @click="sendControl({event:CONTROL_PLAY})">
               <svg class="icon"
                    style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                    viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8206">
@@ -125,15 +135,6 @@
               </svg>
             </view>
 
-            <view @click="sendControl({event:CONTROL_PAUSE})">
-              <svg class="icon"
-                   style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
-                   viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6935">
-                <path
-                    d="M341.333333 853.333333C170.666667 786.090667 170.666667 237.909333 341.333333 170.666667c170.666667-67.242667 512 170.666667 512 341.333333s-341.333333 408.576-512 341.333333z"
-                    fill="#000000" p-id="6936"></path>
-              </svg>
-            </view>
 
           </view>
 
@@ -199,6 +200,7 @@ export default {
     return {
       room: null,
       clientId: null,
+      isPlay: true,
 
       CONTROL_MUTE: CONTROL_MUTE,
       CONTROL_FULLSCREEN: CONTROL_FULLSCREEN,
@@ -221,6 +223,15 @@ export default {
         showToast('未加入任何房间')
         return
       }
+      switch (data.event) {
+        case CONTROL_PAUSE:
+          this.isPlay = false
+          break;
+        case CONTROL_PLAY:
+          this.isPlay = true
+          break;
+      }
+
       console.log('[sendControl.data]', data)
       let post = {
         group: this.room,

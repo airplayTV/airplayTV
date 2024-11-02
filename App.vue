@@ -54,7 +54,7 @@ export default {
     },
     generateFingerprint() {
       if (getStorageSync(KEY_FINGERPRINT)) {
-        return
+        // return
       }
       console.log('[generateFingerprint]')
 

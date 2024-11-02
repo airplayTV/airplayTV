@@ -40,8 +40,21 @@ import Hls from 'hls.js';
 import AppHeader from "@/pages/common/AppHeader.vue";
 import AppFooter from "@/pages/common/AppFooter.vue";
 import {httpRequest} from "@/common/api";
-import {navigateToUrl} from "@/common/utils";
+import {getStorageSync, navigateToUrl, secondsToHuman, showToast} from "@/common/utils";
 import {libmediaAvpUrl} from "@/config";
+import {
+  CONTROL_BACK,
+  CONTROL_FORWARD,
+  CONTROL_FULLSCREEN,
+  CONTROL_INFO,
+  CONTROL_MUTE,
+  CONTROL_PAUSE,
+  CONTROL_PLAY,
+  CONTROL_QRCODE,
+  CONTROL_VOLUME,
+  KEY_FINGERPRINT,
+  KEY_ROOM_ID
+} from "@/common/constant";
 
 export default {
   data() {
@@ -71,6 +84,12 @@ export default {
       navigateToUrl('/video/list?from-detail-empty-pid')
     }
     this.options = options
+
+    if (getStorageSync(KEY_FINGERPRINT) === getStorageSync(KEY_ROOM_ID)) {
+      // 防止消息发送给自己，
+      this.registerControlEventHandler()
+    }
+
     this.loadVideoSource(options.vid, options.pid)
   },
   onReady() {
@@ -204,6 +223,67 @@ export default {
         this.libmediaAvpConfig = `${libmediaAvpUrl}?config=${config}`
       }
     },
+    registerControlEventHandler() {
+      uni.$off('onControlEvent')
+      uni.$on('onControlEvent', (data) => {
+        if (!this.dplayer.player) {
+          showToast('播放器没有执行')
+          return
+        }
+        switch (data.event) {
+          case CONTROL_MUTE:
+            this.dplayer.player.volume(0, true, false)
+            break;
+          case CONTROL_FULLSCREEN:
+            this.dplayer.player.fullScreen.request('web');
+            break;
+          case CONTROL_QRCODE:
+            showToast('需要显示二维码')
+            break;
+          case CONTROL_INFO:
+            console.log('[player]', this.dplayer.player)
+            console.log('[videoSource]', this.dplayer.player.videoSource)
+            console.log('[video]', this.dplayer.player.video)
+            const showTime = 1000 * 30;
+
+            if (this.dplayer.player.videoSource) {
+              this.dplayer.player.notice('上次进度：' + this.dplayer.player.videoSource.url, showTime);
+            }
+            if (this.dplayer.player.video) {
+              this.dplayer.player.notice('当前进度：' + secondsToHuman(this.dplayer.player.video.currentTime), showTime);
+              this.dplayer.player.notice('视频时长：' + secondsToHuman(this.dplayer.player.video.duration), showTime);
+            }
+            if (this.videoSource) {
+              this.dplayer.player.notice('视频名称：' + this.videoSource.name, showTime);
+              this.dplayer.player.notice('视频地址：' + this.videoSource.url, showTime);
+            }
+            break;
+          case CONTROL_VOLUME:
+            if (data.value <= 0) {
+              const newVol = (document.querySelector(".dplayer-video").volume * 100 - 3) / 100;
+              this.dplayer.player.volume(newVol, true, false);
+            }
+            if (data.value > 0) {
+              const newVol = (document.querySelector(".dplayer-video").volume * 100 + 3) / 100;
+              this.dplayer.player.volume(newVol, true, false);
+            }
+            break;
+          case CONTROL_BACK:
+            this.dplayer.player.video.currentTime = this.dplayer.player.video.currentTime - 10;
+            break;
+          case CONTROL_PLAY:
+            this.dplayer.player.video.play();
+            break;
+          case CONTROL_PAUSE:
+            this.dplayer.player.video.pause();
+            break;
+          case CONTROL_FORWARD:
+            this.dplayer.player.video.currentTime = this.dplayer.player.video.currentTime + 10;
+            break;
+        }
+      })
+    },
+
   }
 }
 </script>
