@@ -60,7 +60,7 @@ import {getStorageSync, handleGroupLinks, navigateToUrl} from "@/common/utils";
 import {defaultCover} from "@/config";
 import AppHeader from '@/pages/common/AppHeader.vue'
 import AppFooter from '@/pages/common/AppFooter.vue'
-import {CONTROL_LOAD_VIDEO, KEY_FINGERPRINT, KEY_ROOM_ID} from "@/common/constant";
+import {CONTROL_LOAD_VIDEO, KEY_ROOM_ID} from "@/common/constant";
 
 export default {
   components: { AppHeader, AppFooter },
@@ -69,23 +69,17 @@ export default {
       defaultCover: defaultCover,
       videoInfo: null,
       groupLinks: [],
-      joinedRoom: null,
+      joinedRoom: getStorageSync(KEY_ROOM_ID),
     }
   },
   onLoad(options) {
     if (!options.id) {
       navigateToUrl('/video/list?from-detail-empty-id')
     }
-    this.checkJoinedRoom()
     this.loadVideoInfo(options.id)
   },
   methods: {
     navigateToUrl,
-    checkJoinedRoom() {
-      if (getStorageSync(KEY_FINGERPRINT) !== getStorageSync(KEY_ROOM_ID)) {
-        this.joinedRoom = getStorageSync(KEY_ROOM_ID)
-      }
-    },
     loadVideoInfo(id) {
       httpRequest({
         url: '/api/video/detail',

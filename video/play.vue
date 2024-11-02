@@ -46,13 +46,13 @@ import {
   CONTROL_BACK,
   CONTROL_FORWARD,
   CONTROL_FULLSCREEN,
+  CONTROL_FULLSCREEN_EXIT,
   CONTROL_INFO,
   CONTROL_MUTE,
   CONTROL_PAUSE,
   CONTROL_PLAY,
   CONTROL_QRCODE,
   CONTROL_VOLUME,
-  KEY_FINGERPRINT,
   KEY_ROOM_ID
 } from "@/common/constant";
 
@@ -85,8 +85,8 @@ export default {
     }
     this.options = options
 
-    if (getStorageSync(KEY_FINGERPRINT) === getStorageSync(KEY_ROOM_ID)) {
-      // 防止消息发送给自己，
+    if (!getStorageSync(KEY_ROOM_ID)) {
+      console.log('[registerControlEvent]')
       this.registerControlEventHandler()
     }
 
@@ -119,45 +119,45 @@ export default {
       });
 
       this.dplayer.player.on('ended', function () {
-        console.log('[player ended]');
+        // console.log('[player ended]');
       })
       this.dplayer.player.on('abort', function () {
-        console.log('[player abort]');
+        // console.log('[player abort]');
       })
       this.dplayer.player.on('canplay', function () {
-        console.log('[player canplay]');
+        // console.log('[player canplay]');
       })
       this.dplayer.player.on('error', function () {
-        console.log('[player error]');
+        // console.log('[player error]');
       })
       this.dplayer.player.on('pause', function () {
-        console.log('[player pause]');
+        // console.log('[player pause]');
       })
       this.dplayer.player.on('play', () => {
-        console.log('[player play]', this.dplayer.player);
+        // console.log('[player play]', this.dplayer.player);
 
       })
       this.dplayer.player.on('playing', function () {
-        console.log('[player playing]');
+        // console.log('[player playing]');
       })
       this.dplayer.player.on('fullscreen', function () {
-        console.log('[player fullscreen]');
+        // console.log('[player fullscreen]');
       })
       this.dplayer.player.on('loadeddata', () => {
-        console.log('[player loadeddata]');
+        // console.log('[player loadeddata]');
         this.dplayer.hide = false
       })
       this.dplayer.player.on('loadedmetadata', function () {
-        console.log('[player loadedmetadata]');
+        // console.log('[player loadedmetadata]');
       })
       this.dplayer.player.on('loadstart', function () {
-        console.log('[player loadstart]');
+        // console.log('[player loadstart]');
       })
       this.dplayer.player.on('stalled', function () {
-        console.log('[player stalled]');
+        // console.log('[player stalled]');
       })
       this.dplayer.player.on('waiting', function () {
-        console.log('[player waiting]');
+        // console.log('[player waiting]');
       })
     },
     getPlayerConfig(data) {
@@ -230,55 +230,69 @@ export default {
           showToast('播放器没有执行')
           return
         }
+        const showTime = 1000 * 2.5;
         switch (data.event) {
           case CONTROL_MUTE:
             this.dplayer.player.volume(0, true, false)
+            this.dplayer.player.notice('静音', showTime);
             break;
           case CONTROL_FULLSCREEN:
             this.dplayer.player.fullScreen.request('web');
+            this.dplayer.player.notice('进入全屏', showTime);
+            break;
+          case CONTROL_FULLSCREEN_EXIT:
+            this.dplayer.player.fullScreen.cancel('web');
+            this.dplayer.player.notice('退出全屏', showTime);
             break;
           case CONTROL_QRCODE:
-            showToast('需要显示二维码')
+            this.dplayer.player.notice('显示二维码【暂未实现】', showTime);
+            // showToast('需要显示二维码')
             break;
           case CONTROL_INFO:
             console.log('[player]', this.dplayer.player)
             console.log('[videoSource]', this.dplayer.player.videoSource)
             console.log('[video]', this.dplayer.player.video)
-            const showTime = 1000 * 30;
+            const infoShowTime = 1000 * 10;
 
             if (this.dplayer.player.videoSource) {
-              this.dplayer.player.notice('上次进度：' + this.dplayer.player.videoSource.url, showTime);
+              this.dplayer.player.notice('上次进度：' + this.dplayer.player.videoSource.url, infoShowTime);
             }
             if (this.dplayer.player.video) {
-              this.dplayer.player.notice('当前进度：' + secondsToHuman(this.dplayer.player.video.currentTime), showTime);
-              this.dplayer.player.notice('视频时长：' + secondsToHuman(this.dplayer.player.video.duration), showTime);
+              this.dplayer.player.notice('当前进度：' + secondsToHuman(this.dplayer.player.video.currentTime), infoShowTime);
+              this.dplayer.player.notice('视频时长：' + secondsToHuman(this.dplayer.player.video.duration), infoShowTime);
             }
             if (this.videoSource) {
-              this.dplayer.player.notice('视频名称：' + this.videoSource.name, showTime);
-              this.dplayer.player.notice('视频地址：' + this.videoSource.url, showTime);
+              this.dplayer.player.notice('视频名称：' + this.videoSource.name, infoShowTime);
+              this.dplayer.player.notice('视频地址：' + this.videoSource.url, infoShowTime);
             }
             break;
           case CONTROL_VOLUME:
             if (data.value <= 0) {
               const newVol = (document.querySelector(".dplayer-video").volume * 100 - 3) / 100;
               this.dplayer.player.volume(newVol, true, false);
+              this.dplayer.player.notice('音量-3', showTime);
             }
             if (data.value > 0) {
               const newVol = (document.querySelector(".dplayer-video").volume * 100 + 3) / 100;
               this.dplayer.player.volume(newVol, true, false);
+              this.dplayer.player.notice('音量+3', showTime);
             }
             break;
           case CONTROL_BACK:
             this.dplayer.player.video.currentTime = this.dplayer.player.video.currentTime - 10;
+            this.dplayer.player.notice('后退10秒', showTime);
             break;
           case CONTROL_PLAY:
             this.dplayer.player.video.play();
+            this.dplayer.player.notice('播放', showTime);
             break;
           case CONTROL_PAUSE:
             this.dplayer.player.video.pause();
+            this.dplayer.player.notice('暂停', showTime);
             break;
           case CONTROL_FORWARD:
             this.dplayer.player.video.currentTime = this.dplayer.player.video.currentTime + 10;
+            this.dplayer.player.notice('前进10秒', showTime);
             break;
         }
       })

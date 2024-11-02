@@ -9,6 +9,7 @@ const KEY_VIDEO_SOURCE_TAGS = 'tv_video_source_tags'
 const CONTROL_LOAD_VIDEO = '/ctl_load_Video'
 const CONTROL_MUTE = '/ctl_mute'
 const CONTROL_FULLSCREEN = '/ctl_fullscreen'
+const CONTROL_FULLSCREEN_EXIT = '/ctl_fullscreen_exit'
 const CONTROL_QRCODE = '/ctl_qrCode'
 const CONTROL_INFO = '/ctl_info'
 const CONTROL_VOLUME = '/ctl_volume'
@@ -29,6 +30,7 @@ export {
   CONTROL_LOAD_VIDEO,
   CONTROL_MUTE,
   CONTROL_FULLSCREEN,
+  CONTROL_FULLSCREEN_EXIT,
   CONTROL_QRCODE,
   CONTROL_INFO,
   CONTROL_VOLUME,

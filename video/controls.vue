@@ -44,7 +44,15 @@
           </view>
 
           <!-- 全屏 -->
-          <view @click="sendControl({event:CONTROL_FULLSCREEN})">
+          <view v-if="isFullscreen" @click="sendControl({event:CONTROL_FULLSCREEN_EXIT})">
+            <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
+                 viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5040">
+              <path
+                  d="M213.333333 682.666667h128v128h85.333334v-213.333334H213.333333v85.333334z m128-341.333334H213.333333v85.333334h213.333334V213.333333H341.333333v128z m256 469.333334h85.333334v-128h128v-85.333334h-213.333334v213.333334z m85.333334-469.333334V213.333333h-85.333334v213.333334h213.333334V341.333333h-128z"
+                  fill="#000000" p-id="5041"></path>
+            </svg>
+          </view>
+          <view v-else @click="sendControl({event:CONTROL_FULLSCREEN})">
             <svg class="icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="11590">
               <path
@@ -184,6 +192,7 @@ import {
   CONTROL_BACK,
   CONTROL_FORWARD,
   CONTROL_FULLSCREEN,
+  CONTROL_FULLSCREEN_EXIT,
   CONTROL_INFO,
   CONTROL_MUTE,
   CONTROL_PAUSE,
@@ -201,9 +210,11 @@ export default {
       room: null,
       clientId: null,
       isPlay: true,
+      isFullscreen: false,
 
       CONTROL_MUTE: CONTROL_MUTE,
       CONTROL_FULLSCREEN: CONTROL_FULLSCREEN,
+      CONTROL_FULLSCREEN_EXIT: CONTROL_FULLSCREEN_EXIT,
       CONTROL_QRCODE: CONTROL_QRCODE,
       CONTROL_INFO: CONTROL_INFO,
       CONTROL_VOLUME: CONTROL_VOLUME,
@@ -230,34 +241,24 @@ export default {
         case CONTROL_PLAY:
           this.isPlay = true
           break;
+        case CONTROL_FULLSCREEN:
+          this.isFullscreen = true
+          break
+        case CONTROL_FULLSCREEN_EXIT:
+          this.isFullscreen = false
+          break
       }
-
-      console.log('[sendControl.data]', data)
       let post = {
         group: this.room,
         event: data.event,
         value: data.value,
         from: this.clientId,
       }
-      console.log('[post]', post)
       if (!sendToGroup(post)) {
         showToast('发送失败：网络异常')
         return;
       }
-
       showToast('发送成功')
-
-      // httpRequest({
-      //   url: '/api/video/control',
-      //   method: 'post',
-      //   data: post,
-      //   success: (resp) => {
-      //     console.log('[control]', resp)
-      //     showToast('发送成功' + Date.now())
-      //     // this.videoSource = resp.data
-      //     // this.playVideo(this.videoSource)
-      //   },
-      // })
     },
     onClickQuitRoom() {
       removeStorageSync(KEY_ROOM_ID)

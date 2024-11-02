@@ -1,6 +1,7 @@
 <script>
 
 import {
+  KEY_CLIENT_ID,
   KEY_FINGERPRINT,
   KEY_ROOM_ID,
   KEY_VIDEO_PROVIDERS,
@@ -11,7 +12,7 @@ import {
 import {connect} from "@/common/websocket";
 import {httpRequestAsync, joinGroup} from "@/common/api";
 import * as FingerprintJS from "@fingerprintjs/fingerprintjs";
-import {getStorageSync, setStorageSync} from "@/common/utils";
+import {getStorageSync, removeStorageSync, setStorageSync} from "@/common/utils";
 
 export default {
   onLaunch: function () {
@@ -22,7 +23,6 @@ export default {
     uni.$on('onWebsocketOpen', () => {
       console.log('[onWebsocketOpen]')
       joinGroup(getStorageSync(KEY_FINGERPRINT))
-      joinGroup(getStorageSync(KEY_ROOM_ID))
     })
     uni.$on('onWebsocketClose', () => {
       console.log('[onWebsocketClose]')
@@ -53,8 +53,14 @@ export default {
       connect()
     },
     generateFingerprint() {
+      // 1、启动时删除本地指纹ID/房间ID
+      // 2、重新生成指纹ID，关联到组（房间）
+      // 3、扫码后关联到组（房间ID）
+      removeStorageSync(KEY_CLIENT_ID)
+      removeStorageSync(KEY_ROOM_ID)
+
       if (getStorageSync(KEY_FINGERPRINT)) {
-        // return
+        return
       }
       console.log('[generateFingerprint]')
 
