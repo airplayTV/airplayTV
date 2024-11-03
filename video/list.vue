@@ -2,7 +2,7 @@
   <view class="container">
     <AppHeader show-provider @on-provider-change="onProviderChange"></AppHeader>
 
-    <view class="padding-30rpx padding-no-bottom tags">
+    <view class="padding-30rpx padding-no-bottom tags" v-if="sourceTags && sourceTags.length > 0">
       <text v-for="(tag,idx) in sourceTags" :key="idx"
             class="href"
             :class="tag.value===videoTag?'selected':''"
