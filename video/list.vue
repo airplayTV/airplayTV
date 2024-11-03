@@ -2,8 +2,11 @@
   <view class="container">
     <AppHeader show-provider @on-provider-change="onProviderChange"></AppHeader>
 
-    <view class="padding-30rpx tags hidden">
-      <text v-for="(tag,idx) in sourceTags" :key="idx" class="href">
+    <view class="padding-30rpx padding-no-bottom tags">
+      <text v-for="(tag,idx) in sourceTags" :key="idx"
+            class="href"
+            :class="tag.value===videoTag?'selected':''"
+            @click="onClickUpdateVideoTag(tag.value)">
         {{ tag.name }}
       </text>
     </view>
@@ -29,14 +32,14 @@
       <view class="padding-30rpx">暂无数据</view>
     </view>
 
-    <AppFooter/>
+    <AppFooter />
 
   </view>
 </template>
 
 <script>
 import {httpRequest} from "@/common/api";
-import {getStorageSync, navigateToUrl} from "@/common/utils";
+import {getStorageSync, navigateToUrl, setStorageSync} from "@/common/utils";
 import {KEY_VIDEO_PROVIDERS, KEY_VIDEO_SOURCE, KEY_VIDEO_SOURCE_TAGS, KEY_VIDEO_TAG} from "@/common/constant";
 import AppHeader from '@/pages/common/AppHeader.vue'
 import AppFooter from '@/pages/common/AppFooter.vue'
@@ -52,6 +55,7 @@ export default {
       selectedProvider: null,
       providerList: [],
       defaultCover: defaultCover,
+      videoTag: getStorageSync(KEY_VIDEO_TAG),
     }
   },
   components: { AppHeader, AppFooter },
@@ -103,6 +107,15 @@ export default {
         page: this.page,
       })
     },
+    onClickUpdateVideoTag(tag) {
+      this.videoTag = tag
+      setStorageSync(KEY_VIDEO_TAG, tag)
+
+      this.page = 1
+      this.loadVideoList({
+        page: this.page,
+      })
+    },
   }
 }
 </script>
@@ -117,14 +130,22 @@ export default {
 }
 
 .tags {
-  line-height: 150%;
+  line-height: 180%;
+  color: #999999;
 
   .href {
-    padding: 0 10rpx;
+    margin-right: 15rpx;
+    white-space: nowrap;
+    border-bottom: 1px solid #999999;
+  }
+
+  .selected {
+    color: #4c4c4c;
+    border-bottom: 1px solid #4c4c4c;
   }
 
   .href:first-child {
-    padding-left: 0;
+  //padding-left: 0;
   }
 }
 
