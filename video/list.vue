@@ -1,8 +1,14 @@
 <template>
   <view class="container">
-    <AppHeader show-provider @on-provider-change="onProviderChange"></AppHeader>
+    <AppHeader show-provider @on-provider-change="onProviderChange" @on-search-toggle="onSearchToggle"></AppHeader>
 
-    <view class="padding-30rpx padding-no-bottom tags" v-if="sourceTags && sourceTags.length > 0">
+    <view v-show="showSearch"
+          class="padding-30rpx padding-no-bottom flex-row flex-justify-between flex-align-center search">
+      <input class="uni-input flex-1" v-model="keyword" focus placeholder="输入搜索内容" />
+      <text class="btn" @click="onClickSearch">搜索</text>
+    </view>
+
+    <view class="padding-30rpx padding-no-bottom tags" v-if="sourceTags && sourceTags.length > 0 && !showSearch">
       <text v-for="(tag,idx) in sourceTags" :key="idx"
             class="href"
             :class="tag.value===videoTag?'selected':''"
@@ -24,7 +30,12 @@
         </view>
       </view>
 
-      <uni-pagination :total="videoList.total" :page-size="videoList.limit" @change="onChangePage" />
+      <view v-if="showSearch">
+        <uni-pagination :total="videoList.total" :page-size="videoList.limit" @change="onChangeSearchPage" />
+      </view>
+      <view v-else>
+        <uni-pagination :total="videoList.total" :page-size="videoList.limit" @change="onChangePage" />
+      </view>
 
     </view>
 
@@ -56,6 +67,8 @@ export default {
       providerList: [],
       defaultCover: defaultCover,
       videoTag: getStorageSync(KEY_VIDEO_TAG),
+      showSearch: false,
+      keyword: '',
     }
   },
   components: { AppHeader, AppFooter },
@@ -92,10 +105,33 @@ export default {
         },
       })
     },
+    loadSearchList(query) {
+      httpRequest({
+        url: '/api/video/search',
+        method: 'GET',
+        data: Object.assign({
+          keyword: this.keyword,
+          page: this.page,
+        }, query),
+        success: (resp) => {
+          this.videoList = resp.data
+        },
+        fail: (error) => {
+          console.log('[httpRequest.error]', error)
+        },
+      })
+    },
     onChangePage(e) {
       console.log('[onChangePage]', e)
       this.page = e.current
       this.loadVideoList({
+        page: this.page,
+      })
+    },
+    onChangeSearchPage(e) {
+      console.log('[onChangeSearchPage]', e)
+      this.page = e.current
+      this.loadSearchList({
         page: this.page,
       })
     },
@@ -113,6 +149,22 @@ export default {
 
       this.page = 1
       this.loadVideoList({
+        page: this.page,
+      })
+    },
+    onSearchToggle() {
+      this.showSearch = !this.showSearch
+
+      if (!this.showSearch) {
+        this.page = 1
+        this.loadVideoList({
+          page: this.page,
+        })
+      }
+    },
+    onClickSearch() {
+      this.page = 1
+      this.loadSearchList({
         page: this.page,
       })
     },
@@ -195,5 +247,27 @@ export default {
   }
 }
 
+
+@media screen and (min-width: 900px) {
+  .search {
+    margin: 10px 0;
+  }
+}
+
+.search {
+  .uni-input {
+    padding: 10rpx 10rpx;
+    margin-right: 30rpx;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .btn {
+    padding: 10rpx 30rpx;
+    border-radius: 5px;
+    background-color: #F0F0F0;
+    color: #333333;
+  }
+
+}
 
 </style>
