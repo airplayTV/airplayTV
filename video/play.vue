@@ -84,6 +84,10 @@ export default {
       navigateToUrl('/video/list?from-detail-empty-pid')
     }
     this.options = options
+    if (navigator.userAgent && new RegExp('tesla').test(navigator.userAgent.toLowerCase())) {
+      console.log('[UA]', navigator.userAgent)
+      this.defaultPlayer = false
+    }
 
     if (!getStorageSync(KEY_ROOM_ID)) {
       console.log('[registerControlEvent]')
