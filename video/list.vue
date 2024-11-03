@@ -134,7 +134,7 @@ export default {
   color: #999999;
 
   .href {
-    margin-right: 15rpx;
+    margin-right: 20rpx;
     white-space: nowrap;
     border-bottom: 1px solid #999999;
   }
