@@ -50,7 +50,7 @@
 
 <script>
 import {httpRequest} from "@/common/api";
-import {getStorageSync, navigateToUrl, setStorageSync} from "@/common/utils";
+import {getStorageSync, navigateToUrl, setStorageSync, showToast} from "@/common/utils";
 import {KEY_VIDEO_PROVIDERS, KEY_VIDEO_SOURCE, KEY_VIDEO_SOURCE_TAGS, KEY_VIDEO_TAG} from "@/common/constant";
 import AppHeader from '@/pages/common/AppHeader.vue'
 import AppFooter from '@/pages/common/AppFooter.vue'
@@ -74,13 +74,8 @@ export default {
   components: { AppHeader, AppFooter },
   onLoad() {
 
-    this.sourceTags = getStorageSync(KEY_VIDEO_SOURCE_TAGS)
-    this.selectedProvider = getStorageSync(KEY_VIDEO_SOURCE)
-    this.providerList = getStorageSync(KEY_VIDEO_PROVIDERS).map(item => {
-      return {
-        value: item.name, text: item.name
-      }
-    })
+
+    this.resetSourceVideoTags()
 
     this.loadVideoList({
       page: this.page,
@@ -89,6 +84,15 @@ export default {
   },
   methods: {
     navigateToUrl,
+    resetSourceVideoTags() {
+      this.sourceTags = getStorageSync(KEY_VIDEO_SOURCE_TAGS)
+      this.selectedProvider = getStorageSync(KEY_VIDEO_SOURCE)
+      this.providerList = getStorageSync(KEY_VIDEO_PROVIDERS).map(item => {
+        return {
+          value: item.name, text: item.name
+        }
+      })
+    },
     loadVideoList(query) {
       httpRequest({
         url: '/api/video/list',
@@ -102,6 +106,7 @@ export default {
         },
         fail: (error) => {
           console.log('[httpRequest.error]', error)
+          showToast(error)
         },
       })
     },
@@ -118,6 +123,7 @@ export default {
         },
         fail: (error) => {
           console.log('[httpRequest.error]', error)
+          showToast(error)
         },
       })
     },
@@ -137,7 +143,7 @@ export default {
     },
     onProviderChange(e) {
       console.log('[onProviderChange]@', e)
-
+      this.resetSourceVideoTags()
       this.page = 1
       this.loadVideoList({
         page: this.page,
@@ -197,7 +203,7 @@ export default {
   }
 
   .href:first-child {
-  //padding-left: 0;
+    //padding-left: 0;
   }
 }
 

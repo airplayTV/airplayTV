@@ -1,15 +1,18 @@
 <template>
   <view class="flex-row flex-justify-between padding-30rpx padding-no-bottom flex-align-center">
-    <view class="flex-row flex-align-center">
+    <view class="flex-row flex-align-center flex-justify-center">
       <b @click="navigateToUrl('/video/list')">AirplayTV</b>
       <view class="nav-link">
         <text class="href" @click="navigateToUrl('/video/list')">首页</text>
-        <text class="href" @click="navigateToUrl('/video/controls')">遥控</text>
-        <text class="href">设置</text>
+
+        <text v-if="roomId" class="href" @click="navigateToUrl('/video/controls')">遥控</text>
+        <text v-else class="href" @click="navigateToUrl('/video/qr')">扫码</text>
+
+        <text class="href" @click="navigateToUrl('/video/setting')">设置</text>
       </view>
     </view>
-    <view class="flex-row flex-align-center">
-      <view v-if="showProvider" style="width: 200rpx">
+    <view v-if="showProvider" class="flex-row flex-align-center">
+      <view style="width: 200rpx">
         <uni-data-select
             v-model="selectedProvider"
             :localdata="providerList"
@@ -32,7 +35,13 @@
 
 <script>
 import {getStorageSync, navigateToUrl, setStorageSync} from "@/common/utils";
-import {KEY_VIDEO_PROVIDERS, KEY_VIDEO_SOURCE, KEY_VIDEO_SOURCE_TAGS, KEY_VIDEO_TAG} from "@/common/constant";
+import {
+  KEY_ROOM_ID,
+  KEY_VIDEO_PROVIDERS,
+  KEY_VIDEO_SOURCE,
+  KEY_VIDEO_SOURCE_TAGS,
+  KEY_VIDEO_TAG
+} from "@/common/constant";
 
 export default {
   name: 'AppHeader',
@@ -45,6 +54,7 @@ export default {
       sourceTags: [],
       selectedProvider: null,
       providerList: [],
+      roomId: getStorageSync(KEY_ROOM_ID),
     }
   },
   created() {
