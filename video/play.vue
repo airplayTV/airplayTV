@@ -56,6 +56,7 @@ import {
   KEY_ROOM_ID,
   KEY_VIDEO_PLAYER
 } from "@/common/constant";
+import VConsole from 'vconsole';
 
 const PLAYER_DP = 'dp'
 const PLAYER_AVP = 'libmedia'
@@ -74,6 +75,7 @@ export default {
       videoSource: null,
       defaultPlayer: true,
       libmediaAvpConfig: '',
+      vConsole: null,
     }
   },
   components: {
@@ -84,6 +86,8 @@ export default {
     QrcodeCapture
   },
   onLoad(options) {
+    this.vConsole = new VConsole();
+
     if (!options.pid) {
       navigateToUrl('/video/list?from-detail-empty-pid')
     }
@@ -106,6 +110,11 @@ export default {
   },
   onUnload() {
     this.clearPlayerConfig()
+    if (this.vConsole) {
+      // remove it when you finish debugging
+      this.vConsole.destroy()
+    }
+
   },
   methods: {
     getDefaultPlayer() {
@@ -245,7 +254,7 @@ export default {
           break;
         default:
           setStorageSync(KEY_VIDEO_PLAYER, PLAYER_AVP)
-          const config = btoa(JSON.stringify({ url: this.videoSource.url, _t: Date.now() }))
+          const config = btoa(JSON.stringify({ url: encodeURIComponent(this.videoSource.url), _t: Date.now() }))
           this.libmediaAvpConfig = `${libmediaAvpUrl}?config=${config}`
           break;
       }
