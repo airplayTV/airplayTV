@@ -40,7 +40,7 @@ import Hls from 'hls.js';
 import AppHeader from "@/pages/common/AppHeader.vue";
 import AppFooter from "@/pages/common/AppFooter.vue";
 import {httpRequest} from "@/common/api";
-import {getStorageSync, navigateToUrl, secondsToHuman, showToast} from "@/common/utils";
+import {getStorageSync, navigateToUrl, secondsToHuman, setStorageSync, showToast} from "@/common/utils";
 import {libmediaAvpUrl} from "@/config";
 import {
   CONTROL_BACK,
@@ -53,8 +53,12 @@ import {
   CONTROL_PLAY,
   CONTROL_QRCODE,
   CONTROL_VOLUME,
-  KEY_ROOM_ID
+  KEY_ROOM_ID,
+  KEY_VIDEO_PLAYER
 } from "@/common/constant";
+
+const PLAYER_DP = 'dp'
+const PLAYER_AVP = 'libmedia'
 
 export default {
   data() {
@@ -84,11 +88,7 @@ export default {
       navigateToUrl('/video/list?from-detail-empty-pid')
     }
     this.options = options
-    if (navigator.userAgent && new RegExp('tesla').test(navigator.userAgent.toLowerCase())) {
-      console.log('[UA]', navigator.userAgent)
-      this.defaultPlayer = false
-    }
-
+    this.getDefaultPlayer()
     if (!getStorageSync(KEY_ROOM_ID)) {
       console.log('[registerControlEvent]')
       this.registerControlEventHandler()
@@ -108,6 +108,21 @@ export default {
     this.clearPlayerConfig()
   },
   methods: {
+    getDefaultPlayer() {
+      if (navigator.userAgent && new RegExp('tesla').test(navigator.userAgent.toLowerCase())) {
+        console.log('[UA]', navigator.userAgent)
+        this.defaultPlayer = false
+        setStorageSync(KEY_VIDEO_PLAYER, PLAYER_AVP)
+      } else {
+        switch (getStorageSync(KEY_VIDEO_PLAYER)) {
+          case PLAYER_AVP:
+            this.defaultPlayer = false
+            break
+          default:
+            this.defaultPlayer = true
+        }
+      }
+    },
     playVideo(data) {
       this.clearPlayerConfig()
 
@@ -214,24 +229,32 @@ export default {
         data: { vid: vid, pid: pid, },
         success: (resp) => {
           this.videoSource = resp.data
-          this.playVideo(this.videoSource)
+          this.pickVideoPlayer()
         },
       })
     },
     onClickChangePlayer() {
       this.defaultPlayer = !this.defaultPlayer
-      if (this.defaultPlayer) {
-        this.playVideo(this.videoSource)
-      } else {
-        const config = btoa(JSON.stringify({ url: this.videoSource.url, _t: Date.now() }))
-        this.libmediaAvpConfig = `${libmediaAvpUrl}?config=${config}`
+      this.pickVideoPlayer()
+    },
+    pickVideoPlayer() {
+      switch (this.defaultPlayer) {
+        case true:
+          setStorageSync(KEY_VIDEO_PLAYER, PLAYER_DP)
+          this.playVideo(this.videoSource)
+          break;
+        default:
+          setStorageSync(KEY_VIDEO_PLAYER, PLAYER_AVP)
+          const config = btoa(JSON.stringify({ url: this.videoSource.url, _t: Date.now() }))
+          this.libmediaAvpConfig = `${libmediaAvpUrl}?config=${config}`
+          break;
       }
     },
     registerControlEventHandler() {
       uni.$off('onControlEvent')
       uni.$on('onControlEvent', (data) => {
-        if (!this.dplayer.player) {
-          showToast('播放器没有执行')
+        if (!this.defaultPlayer || !this.dplayer.player) {
+          showToast('当前控制事件只支持dplayer')
           return
         }
         const showTime = 1000 * 2.5;

@@ -5,6 +5,7 @@ const KEY_VIDEO_PROVIDERS = 'tv_video_providers'
 const KEY_VIDEO_SOURCE = 'tv_video_source'
 const KEY_VIDEO_TAG = 'tv_video_tag'
 const KEY_VIDEO_SOURCE_TAGS = 'tv_video_source_tags'
+const KEY_VIDEO_PLAYER = 'tv_video_player'
 
 const CONTROL_LOAD_VIDEO = '/ctl_load_Video'
 const CONTROL_MUTE = '/ctl_mute'
@@ -26,6 +27,7 @@ export {
   KEY_VIDEO_SOURCE,
   KEY_VIDEO_TAG,
   KEY_VIDEO_SOURCE_TAGS,
+  KEY_VIDEO_PLAYER,
 
   CONTROL_LOAD_VIDEO,
   CONTROL_MUTE,
