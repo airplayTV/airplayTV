@@ -3,10 +3,10 @@
     <view class="flex-row flex-align-center flex-justify-center">
       <b @click="navigateToUrl('/video/list')">AirplayTV</b>
       <view class="nav-link">
-        <text class="href" @click="navigateToUrl('/video/list')">首页</text>
+        <text class="href href-index" @click="navigateToUrl('/video/list')">首页</text>
 
         <text v-if="roomId" class="href" @click="navigateToUrl('/video/controls')">遥控</text>
-        <text v-else class="href" @click="navigateToUrl('/video/qr')">扫码</text>
+        <text v-else class="href" @click="navigateToUrl('/video/qr')">投射</text>
 
         <text class="href" @click="navigateToUrl('/video/setting')">设置</text>
       </view>
@@ -94,11 +94,18 @@ export default {
 }
 
 .nav-link {
-  margin-left: 10rpx;
+  margin-left: 15rpx;
 
   .href {
-    padding: 0 10rpx;
+    padding: 0 15rpx;
   }
 
 }
+
+@media screen and (max-width: 420px) {
+  .href-index {
+    display: none;
+  }
+}
+
 </style>
