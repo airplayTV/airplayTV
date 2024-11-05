@@ -73,14 +73,10 @@ export default {
   },
   components: { AppHeader, AppFooter },
   onLoad() {
-
-
     this.resetSourceVideoTags()
-
     this.loadVideoList({
       page: this.page,
     })
-
   },
   methods: {
     navigateToUrl,
@@ -144,6 +140,7 @@ export default {
     onProviderChange(e) {
       console.log('[onProviderChange]@', e)
       this.resetSourceVideoTags()
+      this.videoTag = []
       this.page = 1
       this.loadVideoList({
         page: this.page,
@@ -153,6 +150,7 @@ export default {
       this.videoTag = tag
       setStorageSync(KEY_VIDEO_TAG, tag)
 
+      this.videoList = []
       this.page = 1
       this.loadVideoList({
         page: this.page,
@@ -162,6 +160,7 @@ export default {
       this.showSearch = !this.showSearch
 
       if (!this.showSearch) {
+        this.videoList = []
         this.page = 1
         this.loadVideoList({
           page: this.page,
@@ -169,6 +168,7 @@ export default {
       }
     },
     onClickSearch() {
+      this.videoList = []
       this.page = 1
       this.loadSearchList({
         page: this.page,
