@@ -25,6 +25,12 @@ function hideLoading() {
 }
 
 function showToast(title, config = { duration: 3000, icon: 'none' }) {
+  if (typeof title == 'object') {
+    if (title.errMsg) {
+      title = title.errMsg
+    }
+  }
+
   uni.showToast(Object.assign(config, { title: title }));
 }
 
