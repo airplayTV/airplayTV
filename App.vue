@@ -84,14 +84,14 @@ export default {
 
       let source = getStorageSync(KEY_VIDEO_SOURCE)
       if (!source) {
-        setStorageSync(KEY_VIDEO_SOURCE, providers.data[0].name)
-        source = providers.data[0]
+        source = providers.data[0].name
+        setStorageSync(KEY_VIDEO_SOURCE, source)
       }
 
       let tag = getStorageSync(KEY_VIDEO_TAG)
       if (!tag) {
-        setStorageSync(KEY_VIDEO_TAG, providers.data[0].tags[0].value)
-        tag = providers.data[0]
+        tag = providers.data[0].tags[0].value
+        setStorageSync(KEY_VIDEO_TAG, tag)
       }
 
       let sourceTags = getStorageSync(KEY_VIDEO_SOURCE_TAGS)
