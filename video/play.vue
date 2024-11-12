@@ -10,7 +10,7 @@
     <view class="padding-20rpx padding-no-bottom">
       <div v-show="defaultPlayer" id="dplayer" class="dplayer" ref="dplayer"></div>
       <iframe v-show="!defaultPlayer&&videoSource" class="iframe" :src="libmediaAvpConfig"
-              :key="libmediaAvpConfig"></iframe>
+              :key="libmediaAvpConfig" allowfullscreen></iframe>
 
       <view class="padding-10rpx"></view>
 
