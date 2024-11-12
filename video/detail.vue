@@ -119,19 +119,6 @@ export default {
 
 }
 
-/**
-      <view class="padding-30rpx group-links">
-        <view v-for="(item,idx) in groupLinks" :key="idx">
-          <view class="name">{{item.name}}</view>
-          <view class="flex-row">
-            <view v-for="(link,idxLink) in item.links" :key="idxLink" class="link">
-              {{link.name}}
-            </view>
-          </view>
-        </view>
-      </view>
- */
-
 .group-links {
 
   .group-link {
@@ -150,6 +137,7 @@ export default {
     margin: 7px;
     text-align: center;
     font-size: 24rpx;
+    min-width: 60rpx;
   }
 }
 

@@ -83,6 +83,17 @@ export default {
       setStorageSync(KEY_VIDEO_PROVIDERS, providers.data)
 
       let source = getStorageSync(KEY_VIDEO_SOURCE)
+
+      // 校验数据有没有变化
+      if (providers.data.filter(item => {
+        return item.name === source
+      }).length === 0) {
+        source = null
+        removeStorageSync(KEY_VIDEO_SOURCE)
+        removeStorageSync(KEY_VIDEO_TAG)
+        removeStorageSync(KEY_VIDEO_SOURCE_TAGS)
+      }
+
       if (!source) {
         source = providers.data[0].name
         setStorageSync(KEY_VIDEO_SOURCE, source)
