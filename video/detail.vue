@@ -45,7 +45,7 @@
     </view>
     <view v-else>
       <view class="empty-box color-grey">
-        无视频数据
+        暂无数据
       </view>
     </view>
 
