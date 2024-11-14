@@ -4,7 +4,7 @@
     <AppHeader />
 
     <view class="padding-30rpx padding-no-bottom text-align-center">
-      {{ options.name ?? videoSource.name }}
+      {{ options.name ? options.name : videoSource.name }}
     </view>
 
     <view class="padding-20rpx padding-no-bottom">

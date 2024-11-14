@@ -54,7 +54,7 @@ function handleGroupLinks(links) {
   tmpGroups = tmpGroups.map(item => {
     return {
       name: item,
-      links: groupLinks[item] ?? [],
+      links: groupLinks[item] ? groupLinks[item] : [],
     }
   })
 

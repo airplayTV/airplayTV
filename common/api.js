@@ -52,7 +52,7 @@ function httpRequest(obj) {
     success: function (resp) {
       if (resp.statusCode !== 200) {
         if (isFunction(obj.fail)) {
-          obj.fail(resp.data ?? resp.errMsg)
+          obj.fail(resp.data ? resp.data : resp.errMsg)
         }
         return
       }
