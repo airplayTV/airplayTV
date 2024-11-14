@@ -56,7 +56,7 @@
 
 <script>
 import {httpRequest, sendToGroup} from "@/common/api";
-import {getStorageSync, handleGroupLinks, navigateToUrl} from "@/common/utils";
+import {getStorageSync, handleGroupLinks, navigateToUrl, showToast} from "@/common/utils";
 import {defaultCover} from "@/config";
 import AppHeader from '@/pages/common/AppHeader.vue'
 import AppFooter from '@/pages/common/AppFooter.vue'
@@ -88,6 +88,10 @@ export default {
         success: (resp) => {
           this.videoInfo = resp.data
           this.groupLinks = handleGroupLinks(this.videoInfo.links)
+        },
+        fail: (error) => {
+          console.log('[httpRequest.error]', error)
+          showToast(error)
         },
       })
     },

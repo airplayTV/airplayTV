@@ -240,6 +240,10 @@ export default {
           this.videoSource = resp.data
           this.pickVideoPlayer()
         },
+        fail: (error) => {
+          console.log('[httpRequest.error]', error)
+          showToast(error)
+        },
       })
     },
     onClickChangePlayer() {
