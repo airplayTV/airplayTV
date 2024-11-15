@@ -37,10 +37,12 @@ function connect() {
     uni.$emit('onWebsocketOpen', result)
   })
   socketHandler.onClose(function (result) {
+    isConnecting = false
     console.log('[onClose.readyState]', socketHandler.readyState)
     uni.$emit('onWebsocketClose', result)
   })
   socketHandler.onError(function (result) {
+    isConnecting = false
     console.log('[onError.readyState]', socketHandler.readyState)
     uni.$emit('onWebsocketError', result)
   })
@@ -79,7 +81,7 @@ function handleWebsocketEvent(event, data) {
       setStorageSync(KEY_CLIENT_ID, data.client_id)
       break;
     case CONTROL_LOAD_VIDEO:
-      navigateToUrl(`/video/play?vid=${data.vid}&pid=${data.pid}&_t=${Date.now()}&name=${encodeURIComponent(data.name)}`)
+      navigateToUrl(`/video/play?airplay=1&vid=${data.vid}&pid=${data.pid}&_t=${Date.now()}&name=${encodeURIComponent(data.name)}`)
       break;
     case CONTROL_MUTE:
     case CONTROL_FULLSCREEN:

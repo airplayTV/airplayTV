@@ -76,6 +76,7 @@ export default {
       defaultPlayer: true,
       libmediaAvpConfig: '',
       vConsole: null,
+      airplay: false,
     }
   },
   components: {
@@ -90,6 +91,9 @@ export default {
 
     if (!options.pid) {
       navigateToUrl('/video/list?from-detail-empty-pid')
+    }
+    if (options.airplay) {
+      this.airplay = true
     }
     this.options = options
     this.getDefaultPlayer()
@@ -187,6 +191,13 @@ export default {
       this.dplayer.player.on('waiting', function () {
         // console.log('[player waiting]');
       })
+
+      if (this.airplay) {
+        // 全屏并播放
+        this.dplayer.player.fullScreen.request('web');
+        this.dplayer.player.video.play();
+      }
+
     },
     getPlayerConfig(data) {
       let tmpConfig = {}

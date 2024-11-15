@@ -187,7 +187,7 @@
 import AppHeader from "@/pages/common/AppHeader.vue";
 import AppFooter from "@/pages/common/AppFooter.vue";
 import {sendToGroup} from "@/common/api";
-import {getStorageSync, navigateToUrl, removeStorageSync, showToast} from "@/common/utils";
+import {getStorageSync, setStorageSync, navigateToUrl, removeStorageSync, showToast} from "@/common/utils";
 import {
   CONTROL_BACK,
   CONTROL_FORWARD,
@@ -224,9 +224,12 @@ export default {
       CONTROL_FORWARD: CONTROL_FORWARD,
     }
   },
-  onLoad() {
+  onLoad(options) {
     this.room = getStorageSync(KEY_ROOM_ID)
     this.clientId = getStorageSync(KEY_CLIENT_ID)
+    if (options['room'] && !this.room) {
+      setStorageSync(KEY_ROOM_ID, options['room'])
+    }
   },
   methods: {
     sendControl(data) {

@@ -57,7 +57,7 @@ export default {
       // 2、重新生成指纹ID，关联到组（房间）
       // 3、扫码后关联到组（房间ID）
       removeStorageSync(KEY_CLIENT_ID)
-      removeStorageSync(KEY_ROOM_ID)
+      // removeStorageSync(KEY_ROOM_ID)
 
       if (getStorageSync(KEY_FINGERPRINT)) {
         return

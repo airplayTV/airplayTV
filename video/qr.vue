@@ -2,15 +2,28 @@
   <view class="container">
     <AppHeader/>
 
-    <view class="padding-30rpx"></view>
 
-    <view class="flex-column flex-justify-center flex-align-center">
-      <image class="qr" :src="qrCodeUrl"></image>
-      <view class="text-area">
-        <view>扫码投射</view>
-        <view>房间号：{{ fingerprintId }}</view>
+    <view v-if="fromTV">
+      <view class="flex-column flex-justify-center flex-align-center">
+        <image style="height: 300rpx;width: 300rpx;" :src="qrCodeUrl"></image>
+        <view class="text-area">
+          <view>扫码投射</view>
+          <view>房间号：{{ fingerprintId }}</view>
+        </view>
       </view>
     </view>
+    <view v-else>
+      <view class="padding-30rpx"></view>
+
+      <view class="flex-column flex-justify-center flex-align-center">
+        <image style="height: 600rpx;width: 600rpx;" :src="qrCodeUrl"></image>
+        <view class="text-area">
+          <view>扫码投射</view>
+          <view>房间号：{{ fingerprintId }}</view>
+        </view>
+      </view>
+    </view>
+
 
     <AppFooter/>
 
@@ -33,9 +46,14 @@ export default {
       qrCodeUrl: null,
       clientId: null,
       fingerprintId: null,
+      fromTV: false,
     }
   },
-  onLoad() {
+  onLoad(options) {
+    if (options['_from'] === 'tv') {
+      this.fromTV = true
+    }
+
     this.loadLocalStorage()
     this.qrCode()
   },

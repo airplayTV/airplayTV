@@ -25,7 +25,7 @@ export default {
     this.room = options.room
     setStorageSync(KEY_ROOM_ID, this.room)
     joinGroup(this.room)
-    navigateToUrl('/video/controls?from=join-room-ok')
+    navigateToUrl(`/video/controls?from=join-room-ok&room=${this.room}`)
   },
   methods: {}
 }
