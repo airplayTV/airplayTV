@@ -60,7 +60,7 @@ import {getStorageSync, handleGroupLinks, navigateToUrl, showToast} from "@/comm
 import {defaultCover} from "@/config";
 import AppHeader from '@/pages/common/AppHeader.vue'
 import AppFooter from '@/pages/common/AppFooter.vue'
-import {CONTROL_LOAD_VIDEO, KEY_ROOM_ID} from "@/common/constant";
+import {CONTROL_LOAD_VIDEO, KEY_ROOM_ID, KEY_VIDEO_SOURCE} from "@/common/constant";
 
 export default {
   components: { AppHeader, AppFooter },
@@ -103,6 +103,7 @@ export default {
           vid: this.videoInfo.id,
           pid: link.id,
           name: this.videoInfo.name,
+          source: getStorageSync(KEY_VIDEO_SOURCE),
         })
         navigateToUrl('/video/controls')
       } else {

@@ -11,6 +11,7 @@ import {
   CONTROL_PLAY,
   CONTROL_QRCODE,
   CONTROL_VOLUME,
+  KEY_VIDEO_SOURCE,
   KEY_CLIENT_ID
 } from "@/common/constant";
 
@@ -81,6 +82,7 @@ function handleWebsocketEvent(event, data) {
       setStorageSync(KEY_CLIENT_ID, data.client_id)
       break;
     case CONTROL_LOAD_VIDEO:
+      setStorageSync(KEY_VIDEO_SOURCE, data.source)
       navigateToUrl(`/video/play?airplay=1&vid=${data.vid}&pid=${data.pid}&_t=${Date.now()}&name=${encodeURIComponent(data.name)}`)
       break;
     case CONTROL_MUTE:
