@@ -11,9 +11,10 @@
         <text class="href" @click="navigateToUrl('/video/setting')">设置</text>
       </view>
     </view>
-    <view v-if="showProvider" class="flex-row flex-align-center">
+    <view class="flex-row flex-align-center">
       <view style="width: 200rpx">
         <uni-data-select
+            :disabled="!showProvider"
             v-model="selectedProvider"
             :localdata="providerList"
             :clear="false"
@@ -100,6 +101,11 @@ export default {
     padding: 0 15rpx;
   }
 
+}
+
+/deep/ .uni-select {
+  border: unset;
+  border-bottom: solid 1px #e5e5e5;
 }
 
 @media screen and (max-width: 420px) {
