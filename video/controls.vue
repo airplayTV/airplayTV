@@ -229,6 +229,7 @@ export default {
     this.clientId = getStorageSync(KEY_CLIENT_ID)
     if (options['room'] && !this.room) {
       setStorageSync(KEY_ROOM_ID, options['room'])
+      this.room = options['room']
     }
   },
   methods: {
