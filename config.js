@@ -1,5 +1,5 @@
-const apiUrl = 'https://airplay-tv.lixiang4u.xyz'
-const websocketAddr = 'wss://airplay-tv.lixiang4u.xyz/api/wss'
+const apiUrl = 'https://airplay-api.artools.cc'
+const websocketAddr = 'wss://airplay-api.artools.cc/api/wss'
 const joinRoomUrl = 'https://airplay-tv.pages.dev/#/group/join'
 const libmediaAvpUrl = 'https://libmedia-avp.pages.dev/'
 const defaultCover = 'https://iph.href.lu/360x528?text=.&fg=bcbcbc&bg=eeeeee'
